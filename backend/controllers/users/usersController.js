@@ -103,12 +103,18 @@ const deleteUser = asyncHandler(async (req, res) => {
 // Update User
 const updateUser = asyncHandler(async (req, res) => {
 	const { id } = req.params;
-	try {
-		const user = await User.findByIdAndUpdate(id);
-		res.json(user);
-	} catch (error) {
-		res.json(error);
-	}
+	// check if user id is valid
+	validateMongodbID(id);
+	const user = await User.findByIdAndUpdate(id, {
+		firstName: req.body.firstName,
+		lastName: req.body.lastName,
+		email: req.body.email,
+		bio: req.body.bio,
+	}, {
+		new: true,
+		runValidators: true,
+	});
+	res.json(user);
 });
 
 module.exports = {
