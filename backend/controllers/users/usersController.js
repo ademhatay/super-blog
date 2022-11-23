@@ -60,6 +60,7 @@ const fetchAllUsers = asyncHandler(async (req, res) => {
 // Get Single User
 const fetchSingleUser = asyncHandler(async (req, res) => {
 	const { id } = req.params;
+	// check if user id is valid
 	validateMongodbID(id);
 	try {
 		const user = await User.findById(id);
@@ -68,6 +69,21 @@ const fetchSingleUser = asyncHandler(async (req, res) => {
 		res.json(error);
 	}
 });
+
+// --------------------------------------------------
+// User Profile
+const userProfile = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	// check if user id is valid
+	validateMongodbID(id);
+	try {
+		const myProfile = await User.findById(id);
+		res.json(myProfile);
+	} catch (error) {
+		res.json(error);
+	}
+});
+
 
 // --------------------------------------------------
 // Delete User
@@ -101,6 +117,6 @@ module.exports = {
 	getUsers: fetchAllUsers,
 	getUser: fetchSingleUser,
 	deleteUser,
-	updateUser
-
+	updateUser,
+	userProfile
 }
