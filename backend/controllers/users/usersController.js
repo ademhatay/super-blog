@@ -117,6 +117,25 @@ const updateUser = asyncHandler(async (req, res) => {
 	res.json(user);
 });
 
+// --------------------------------------------------
+// Update Password
+const updatePassword = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	const {password} = req.body;
+	// check if user id is valid
+	validateMongodbID(id);
+	const user = await User.findById(id);
+	if (password) {
+		user.password = password;
+		const updatedUser = await user.save();
+		res.json(updatedUser);
+	} else {
+		res.status(400);
+		throw new Error('Invalid password');
+	}
+});
+
+
 module.exports = {
 	register: userRegister,
 	login: userLogin,
@@ -124,5 +143,6 @@ module.exports = {
 	getUser: fetchSingleUser,
 	deleteUser,
 	updateUser,
-	userProfile
+	userProfile,
+	updatePassword
 }
