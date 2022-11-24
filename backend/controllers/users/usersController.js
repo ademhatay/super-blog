@@ -141,6 +141,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 		throw new Error('Invalid password');
 	}
 });
+
 // --------------------------------------------------
 // Follow User
 const followUser = asyncHandler(async (req, res) => {
@@ -149,8 +150,9 @@ const followUser = asyncHandler(async (req, res) => {
 	// check if user id is valid
 	validateMongodbID(loginUserID);
 
-	// find the taeger user and check if the login id exist in the followers array
+	const loginUser = await User.findById(loginUserID);
 	const targetUser = await User.findById(followID);
+	// find the target user and check if the login id exist in the followers array
 	const allFollowers = targetUser?.followers?.find((user) => user?._id?.toString() === loginUserID?.toString());
 	if (allFollowers) {
 		res.status(400);
@@ -159,14 +161,55 @@ const followUser = asyncHandler(async (req, res) => {
 		// add followID to login user following array
 		await User.findByIdAndUpdate(followID, {
 			$push: { followers: loginUserID },
+			isFollowing: true,
+		}, {
+			new: true,
 		});
 
 		// add login user id to followID followers array
 		const user = await User.findByIdAndUpdate(loginUserID, {
 			$push: { following: followID },
+		}, {
+			new: true,
 		});
 	}
-	res.json({ message: "user followed" });
+	res.json({ message: "user followed", yourFollowing: [...loginUser?.following, followID] });
+});
+
+// --------------------------------------------------
+// Unfollow User
+const unfollowUser = asyncHandler(async (req, res) => {
+	const { unfollowID } = req.body;
+	const loginUserID = req.user.id;
+
+	const loginUser = await User.findById(loginUserID);
+	const targetUser = await User.findById(unfollowID);
+
+	// find the target user and check if the login id exist in the followers array
+	const allFollowers = targetUser?.followers?.find((user) => user?._id?.toString() === loginUserID?.toString());
+
+	if (allFollowers) {
+
+		await User.findByIdAndUpdate(unfollowID, {
+			$pull: { followers: loginUserID },
+			isFollowing: false,
+			isUnfollowing: true,
+		}, {
+			new: true,
+		});
+	} else {
+		res.status(400);
+		throw new Error('You already dont follow this user');
+	}
+
+	const user = await User.findByIdAndUpdate(loginUserID, {
+		$pull: { following: unfollowID },
+
+	}, {
+		new: true,
+	});
+
+	res.json({ message: "user unfollowed", yourFollowing: user?.following });
 });
 
 module.exports = {
@@ -178,5 +221,6 @@ module.exports = {
 	updateUser,
 	userProfile,
 	updatePassword,
-	followUser
+	followUser,
+	unfollowUser
 }
