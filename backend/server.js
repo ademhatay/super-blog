@@ -11,9 +11,7 @@ dbConnect();
 app.use(express.json());
 
 // Custom Middleware
-app.get('/', (req, res) => {
-	res.send('API is running...');
-})
+
 // Routes
 app.use('/api/users', userRoute);
 

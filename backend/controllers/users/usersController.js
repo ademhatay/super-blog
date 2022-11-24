@@ -5,18 +5,17 @@ const validateMongodbID = require('../../utils/validateMongodbID');
 // --------------------------------------------------
 // REGISTER
 const userRegister = asyncHandler(async (req, res) => {
-	// check if user already exists
-	const userExists = await User.findOne({ email: req.body.email });
-	if (userExists) throw new Error('User already exists');
+	//Check if user Exist
+	const userExists = await User.findOne({ email: req?.body?.email });
+
+	if (userExists) throw new Error("User already exists");
 	try {
-		// Register new User
-		const { firstName, lastName, email, password } = req.body;
+		//Register user
 		const user = await User.create({
-			// ex:: firstName: firstName,
-			firstName,
-			lastName,
-			email,
-			password
+			firstName: req?.body?.firstName,
+			lastName: req?.body?.lastName,
+			email: req?.body?.email,
+			password: req?.body?.password,
 		});
 		res.json(user);
 	} catch (error) {
@@ -28,19 +27,24 @@ const userRegister = asyncHandler(async (req, res) => {
 // LOGIN
 const userLogin = asyncHandler(async (req, res) => {
 	const { email, password } = req.body;
-	const user = await User.findOne({ email });
-	if (user && (await user.matchPassword(password))) {
-		res.json({
-			firstName: user.firstName,
-			lastName: user.lastName,
-			email: user.email,
-			profilePhoto: user.profilePhoto,
-			isAdmin: user.isAdmin,
-			token: generateToken(user._id)
-		});
+	//check if user exists
+	const userFound = await User.findOne({ email });
+	//Check if password is match
+	if (userFound && (await userFound.matchPassword(password))) {
+		const user = {
+			_id: userFound?._id,
+			firstName: userFound?.firstName,
+			lastName: userFound?.lastName,
+			email: userFound?.email,
+			profilePhoto: userFound?.profilePhoto,
+			isAdmin: userFound?.isAdmin,
+			token: generateToken(userFound?._id),
+		}
+		res.json(user);
+		console.log(user);
 	} else {
 		res.status(401);
-		throw new Error('Invalid email or password');
+		throw new Error("Invalid Login Credentials");
 	}
 });
 
@@ -73,11 +77,11 @@ const fetchSingleUser = asyncHandler(async (req, res) => {
 // --------------------------------------------------
 // User Profile
 const userProfile = asyncHandler(async (req, res) => {
-	const { id } = req.params;
+	const { _id } = req.user;
 	// check if user id is valid
-	validateMongodbID(id);
+	validateMongodbID(_id);
 	try {
-		const myProfile = await User.findById(id);
+		const myProfile = await User.findById(_id);
 		res.json(myProfile);
 	} catch (error) {
 		res.json(error);
@@ -88,12 +92,12 @@ const userProfile = asyncHandler(async (req, res) => {
 // --------------------------------------------------
 // Delete User
 const deleteUser = asyncHandler(async (req, res) => {
-	const { id } = req.params;
+	const { _id } = req.user;
 	// check if user id is valid
-	validateMongodbID(id);
+	validateMongodbID(_id);
 	try {
-		const user = await User.findByIdAndDelete(id);
-		res.json({ message: "user delete" });
+		const user = await User.findByIdAndDelete(_id);
+		res.json({ message: "user delete", user });
 	} catch (error) {
 		res.json(error);
 	}
@@ -102,10 +106,10 @@ const deleteUser = asyncHandler(async (req, res) => {
 // --------------------------------------------------
 // Update User
 const updateUser = asyncHandler(async (req, res) => {
-	const { id } = req.params;
+	const { _id } = req.user;
 	// check if user id is valid
-	validateMongodbID(id);
-	const user = await User.findByIdAndUpdate(id, {
+	validateMongodbID(_id);
+	const user = await User.findByIdAndUpdate(_id, {
 		firstName: req.body.firstName,
 		lastName: req.body.lastName,
 		email: req.body.email,
@@ -114,21 +118,24 @@ const updateUser = asyncHandler(async (req, res) => {
 		new: true,
 		runValidators: true,
 	});
-	res.json(user);
+	res.json({
+		message: "user updated",
+		user,
+	});
 });
 
 // --------------------------------------------------
 // Update Password
 const updatePassword = asyncHandler(async (req, res) => {
-	const { id } = req.params;
-	const {password} = req.body;
+	const { _id } = req.user;
+	const { password } = req.body;
 	// check if user id is valid
-	validateMongodbID(id);
-	const user = await User.findById(id);
+	validateMongodbID(_id);
+	const user = await User.findById(_id);
 	if (password) {
 		user.password = password;
 		const updatedUser = await user.save();
-		res.json(updatedUser);
+		res.json({ message: "password updated", updatedUser });
 	} else {
 		res.status(400);
 		throw new Error('Invalid password');
