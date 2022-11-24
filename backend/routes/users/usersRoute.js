@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getUsers, getUser, deleteUser, updateUser, userProfile, updatePassword, followUser, unfollowUser } = require('../../controllers/users/usersController');
+const { register, login, getUsers, getUser, deleteUser, updateUser, userProfile, updatePassword, followUser, unfollowUser, blockUser, unBlockUser } = require('../../controllers/users/usersController');
 const authMiddleware = require('../../middlewares/auth/authMiddleware');
 
 // Register
@@ -16,6 +16,10 @@ router.put('/password', authMiddleware, updatePassword);
 router.put('/follow', authMiddleware, followUser);
 // Follow User
 router.put('/unfollow', authMiddleware, unfollowUser);
+// Block User
+router.put('/block-user/:id', authMiddleware, blockUser);
+// UnBlock User
+router.put('/unblock-user/:id', authMiddleware, unBlockUser);
 // Get Login User Profile
 router.get('/profile', authMiddleware, userProfile);
 // Update user by login user

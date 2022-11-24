@@ -212,6 +212,29 @@ const unfollowUser = asyncHandler(async (req, res) => {
 	res.json({ message: "user unfollowed", yourFollowing: user?.following });
 });
 
+// --------------------------------------------------
+// Block User
+const blockUser = asyncHandler(async (req, res) => {
+	const {id} = req.params;
+	validateMongodbID(id);
+	const user = await User.findByIdAndUpdate(id, {
+		isBlocked: true,
+	}, {new: true});
+	res.json({message: "user blocked", user});
+});
+
+// --------------------------------------------------
+// UnBlock User
+const unBlockUser = asyncHandler(async (req, res) => {
+	const {id} = req.params;
+	validateMongodbID(id);
+	const user = await User.findByIdAndUpdate(id, {
+		isBlocked: false,
+	}, {new: true});
+	res.json({message: "user unblocked", user});
+});
+
+
 module.exports = {
 	register: userRegister,
 	login: userLogin,
@@ -222,5 +245,7 @@ module.exports = {
 	userProfile,
 	updatePassword,
 	followUser,
-	unfollowUser
+	unfollowUser,
+	blockUser,
+	unBlockUser
 }
