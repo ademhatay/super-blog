@@ -141,7 +141,33 @@ const updatePassword = asyncHandler(async (req, res) => {
 		throw new Error('Invalid password');
 	}
 });
+// --------------------------------------------------
+// Follow User
+const followUser = asyncHandler(async (req, res) => {
+	const { followID } = req.body;
+	const loginUserID = req.user.id;
+	// check if user id is valid
+	validateMongodbID(loginUserID);
 
+	// find the taeger user and check if the login id exist in the followers array
+	const targetUser = await User.findById(followID);
+	const allFollowers = targetUser?.followers?.find((user) => user?._id?.toString() === loginUserID?.toString());
+	if (allFollowers) {
+		res.status(400);
+		throw new Error('You already follow this user');
+	} else {
+		// add followID to login user following array
+		await User.findByIdAndUpdate(followID, {
+			$push: { followers: loginUserID },
+		});
+
+		// add login user id to followID followers array
+		const user = await User.findByIdAndUpdate(loginUserID, {
+			$push: { following: followID },
+		});
+	}
+	res.json({ message: "user followed" });
+});
 
 module.exports = {
 	register: userRegister,
@@ -151,5 +177,6 @@ module.exports = {
 	deleteUser,
 	updateUser,
 	userProfile,
-	updatePassword
+	updatePassword,
+	followUser
 }
