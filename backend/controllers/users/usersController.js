@@ -333,7 +333,6 @@ const forgetPasswordToken = asyncHandler(async (req, res) => {
 	try {
 		// generate token
 		const resetToken = await user.resetPasswordTokenGenerate();
-		console.log(resetToken);
 		user.save();
 		// build message
 		let transporter = nodemailer.createTransport({
@@ -354,10 +353,10 @@ const forgetPasswordToken = asyncHandler(async (req, res) => {
 			subject: 'Şifrenizi Sıfırlayın',
 			html: resetURL,
 		});
+		res.json({ resetURL });
 	} catch (error) {
 		console.log(error);
 	}
-	res.json({ resetURL });
 });
 
 // --------------------------------------------------
@@ -376,6 +375,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 	user.password = password;
 	user.passwordResetToken = undefined;
 	user.passwordResetTokenExpires = undefined;
+	user.passwordChangedAt = Date.now();
 	await user.save();
 	res.json({ msg: "password changed succesfully", user });
 });
