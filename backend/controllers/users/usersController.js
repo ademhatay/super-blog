@@ -287,7 +287,7 @@ const generateVerifyEmailToken = asyncHandler(async (req, res) => {
 		});
 		const resetURL = `If you were requested to verify your account, verify within 10 minutes, otherwise ignore this email <a href="http://localhost:3000/verify-account/${verificationToken}">Verify</a>`;
 		const msg = await transporter.sendMail({
-			to: req.body.email,
+			to: req.user.email,
 			from: process.env.EMAIL_USERNAME,
 			subject: 'Hesabınızı Doğrulayın',
 			html: resetURL,
@@ -320,6 +320,66 @@ const accountVerification = asyncHandler(async (req, res) => {
 	res.json(userFound);
 });
 
+// --------------------------------------------------
+//	Forget Token Generate
+const forgetPasswordToken = asyncHandler(async (req, res) => {
+	// find the user by email
+	const { email } = req.user;
+	const user = await User.findOne({ email });
+	if (!user) {
+		res.status(400);
+		throw new Error('There is no user with this email, try login');
+	}
+	try {
+		// generate token
+		const resetToken = await user.resetPasswordTokenGenerate();
+		console.log(resetToken);
+		user.save();
+		// build message
+		let transporter = nodemailer.createTransport({
+			service: 'gmail',
+			host: "smtp.gmail.com",
+			port: 456,
+			secure: true, // true for 465, false for other ports
+			auth: {
+				user: process.env.EMAIL_USERNAME, // generated ethereal user
+				pass: process.env.EMAIL_PASSWORD // generated ethereal password
+			},
+		});
+		const resetURL = `If you were requested to reset your password, reset within 10 minutes, otherwise ignore this email <a href="http://localhost:3000/reset-password/${resetToken}">Reset</a>`;
+
+		const msg = await transporter.sendMail({
+			to: req.user.email,
+			from: process.env.EMAIL_USERNAME,
+			subject: 'Şifrenizi Sıfırlayın',
+			html: resetURL,
+		});
+	} catch (error) {
+		console.log(error);
+	}
+	res.json({ resetURL });
+});
+
+// --------------------------------------------------
+//	Reset Password
+const resetPassword = asyncHandler(async (req, res) => {
+	const { token, password } = req.body;
+	const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+	const user = await User.findOne({
+		passwordResetToken: hashedToken
+	});
+	if (!user) {
+		res.status(400);
+		throw new Error('Token is invalid or has expired, try again later');
+	}
+	// update user
+	user.password = password;
+	user.passwordResetToken = undefined;
+	user.passwordResetTokenExpires = undefined;
+	await user.save();
+	res.json({ msg: "password changed succesfully", user });
+});
+
 
 module.exports = {
 	register: userRegister,
@@ -335,5 +395,7 @@ module.exports = {
 	blockUser,
 	unBlockUser,
 	generateVerifyEmailToken,
-	accountVerification
+	accountVerification,
+	forgetPasswordToken,
+	resetPassword
 }

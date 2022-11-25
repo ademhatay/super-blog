@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getUsers, getUser, deleteUser, updateUser, userProfile, updatePassword, followUser, unfollowUser, blockUser, unBlockUser, generateVerifyEmailToken, accountVerification } = require('../../controllers/users/usersController');
+const { register, login, getUsers, getUser, deleteUser, updateUser, userProfile, updatePassword, followUser, unfollowUser, blockUser, unBlockUser, generateVerifyEmailToken, accountVerification, forgetPasswordToken, resetPassword } = require('../../controllers/users/usersController');
 const authMiddleware = require('../../middlewares/auth/authMiddleware');
 
 // Register
@@ -10,8 +10,17 @@ router.post('/login', login);
 
 // Fetch all users
 router.get('/', authMiddleware, getUsers);
+
 // generateVerifyEmailToken
 // router.post('/send-mail', authMiddleware, verifyEmail);
+
+
+// Forget Password TOKEN
+router.post('/forget-password-token', authMiddleware, forgetPasswordToken);
+// resetPassword
+router.put('/reset-password', authMiddleware, resetPassword);
+// Update Password user login user
+router.put('/password', authMiddleware, updatePassword);
 // generateVerifyEmailToken
 router.post(
 	'/generate-verify-email-token',
@@ -24,8 +33,6 @@ router.put(
 	authMiddleware,
 	accountVerification
 );
-// Update Password user login user
-router.put('/password', authMiddleware, updatePassword);
 // Follow User
 router.put('/follow', authMiddleware, followUser);
 // Follow User
