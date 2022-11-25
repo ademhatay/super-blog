@@ -2,6 +2,9 @@ const asyncHandler = require('express-async-handler')
 const User = require('../../models/user/User');
 const generateToken = require('../../config/token/generateToken');
 const validateMongodbID = require('../../utils/validateMongodbID');
+const nodemailer = require('nodemailer');
+const crypto = require('crypto');
+
 // --------------------------------------------------
 // REGISTER
 const userRegister = asyncHandler(async (req, res) => {
@@ -215,23 +218,106 @@ const unfollowUser = asyncHandler(async (req, res) => {
 // --------------------------------------------------
 // Block User
 const blockUser = asyncHandler(async (req, res) => {
-	const {id} = req.params;
+	const { id } = req.params;
 	validateMongodbID(id);
 	const user = await User.findByIdAndUpdate(id, {
 		isBlocked: true,
-	}, {new: true});
-	res.json({message: "user blocked", user});
+	}, { new: true });
+	res.json({ message: "user blocked", user });
 });
 
 // --------------------------------------------------
 // UnBlock User
 const unBlockUser = asyncHandler(async (req, res) => {
-	const {id} = req.params;
+	const { id } = req.params;
 	validateMongodbID(id);
 	const user = await User.findByIdAndUpdate(id, {
 		isBlocked: false,
-	}, {new: true});
-	res.json({message: "user unblocked", user});
+	}, { new: true });
+	res.json({ message: "user unblocked", user });
+});
+
+// --------------------------------------------------
+// SendMail with
+// const verifyEmail = asyncHandler(async (req, res) => {
+// 	let transporter = nodemailer.createTransport({
+// 		service: 'gmail',
+// 		host: "smtp.gmail.com",
+// 		port: 456,
+// 		secure: true, // true for 465, false for other ports
+// 		auth: {
+// 			user: process.env.EMAIL_USERNAME, // generated ethereal user
+// 			pass: process.env.EMAIL_PASSWORD // generated ethereal password
+// 		},
+// 	});
+// 	const emailHtmlFile = path.join(__dirname, '../../email.html');
+// 	const emailHtml = fs.readFileSync(emailHtmlFile, 'utf8');
+// 	let info = await transporter.sendMail({
+// 		from: '"SuperBlog" <dmtrktm.31@gmail.com>', // sender address
+// 		to: req.body.email, // list of receivers
+// 		subject: "Hesabınızı Doğrulayın", // Subject line
+// 		text: "", // plain text body
+// 		html: emailHtml, // html body
+// 	});
+
+// 	res.json({ message: "email sent", info });
+
+// });
+
+// --------------------------------------------------
+//	generateVerifyEmailToken
+const generateVerifyEmailToken = asyncHandler(async (req, res) => {
+	const loginUserID = req.user.id;
+	const user = await User.findById(loginUserID);
+
+	try {
+		// generate token
+		const verificationToken = await user.verifyAccount();
+		user.save();
+		// build message
+		let transporter = nodemailer.createTransport({
+			service: 'gmail',
+			host: "smtp.gmail.com",
+			port: 456,
+			secure: true, // true for 465, false for other ports
+			auth: {
+				user: process.env.EMAIL_USERNAME, // generated ethereal user
+				pass: process.env.EMAIL_PASSWORD // generated ethereal password
+			},
+		});
+		const resetURL = `If you were requested to verify your account, verify within 10 minutes, otherwise ignore this email <a href="http://localhost:3000/verify-account/${verificationToken}">Verify</a>`;
+		const msg = await transporter.sendMail({
+			to: req.body.email,
+			from: process.env.EMAIL_USERNAME,
+			subject: 'Hesabınızı Doğrulayın',
+			html: resetURL,
+		});
+		res.json({ resetURL });
+
+	} catch (error) {
+		console.log(error);
+	};
+});
+
+// --------------------------------------------------
+//	Account Verification
+const accountVerification = asyncHandler(async (req, res) => {
+	const { token } = req.body
+	const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+	const userFound = await User.findOne({
+		accountVerificationToken: hashedToken,
+		accountVerificationTokenExpires: { $gt: Date.now() },
+	});
+	if (!userFound) {
+		res.status(400);
+		throw new Error('Token is invalid or has expired');
+	}
+	// update user
+	userFound.isAccountVerified = true;
+	userFound.accountVerificationToken = undefined;
+	userFound.accountVerificationTokenExpires = undefined;
+	await userFound.save();
+	res.json(userFound);
 });
 
 
@@ -247,5 +333,7 @@ module.exports = {
 	followUser,
 	unfollowUser,
 	blockUser,
-	unBlockUser
+	unBlockUser,
+	generateVerifyEmailToken,
+	accountVerification
 }
