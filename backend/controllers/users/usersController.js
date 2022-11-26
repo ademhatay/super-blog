@@ -359,7 +359,7 @@ const forgetPasswordToken = asyncHandler(async (req, res) => {
 	}
 });
 
-// --------------------------------------------------
+// -------------------------------------------------
 //	Reset Password
 const resetPassword = asyncHandler(async (req, res) => {
 	const { token, password } = req.body;
