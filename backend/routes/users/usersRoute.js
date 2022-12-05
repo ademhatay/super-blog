@@ -1,13 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { register, login, getUsers, getUser, deleteUser, updateUser, userProfile, updatePassword, followUser, unfollowUser, blockUser, unBlockUser, generateVerifyEmailToken, accountVerification, forgetPasswordToken, resetPassword } = require('../../controllers/users/usersController');
+const { register, login, getUsers, getUser, deleteUser, updateUser, userProfile, updatePassword, followUser, unfollowUser, blockUser, unBlockUser, generateVerifyEmailToken, accountVerification, forgetPasswordToken, resetPassword, pPhotoUpload } = require('../../controllers/users/usersController');
 const authMiddleware = require('../../middlewares/auth/authMiddleware');
+const { profilePhotoUpload, profilePhotoResize } = require('../../middlewares/uploads/profilePhotoUpload');
 
 // Register
 router.post('/register', register);
 // Login
 router.post('/login', login);
-
+// Forget Password TOKEN
+router.put('/profilePhoto-upload',
+	profilePhotoUpload.single('image'),
+	authMiddleware,
+	profilePhotoResize,
+	pPhotoUpload
+);
 // Fetch all users
 router.get('/', authMiddleware, getUsers);
 

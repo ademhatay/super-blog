@@ -4,6 +4,8 @@ const generateToken = require('../../config/token/generateToken');
 const validateMongodbID = require('../../utils/validateMongodbID');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const cloudinaryUploadImg = require('../../utils/cloudinary');
+const fs = require('fs');
 
 // --------------------------------------------------
 // REGISTER
@@ -380,6 +382,29 @@ const resetPassword = asyncHandler(async (req, res) => {
 	res.json({ msg: "password changed succesfully", user });
 });
 
+// -------------------------------------------------
+//	Profile Picture Upload
+
+const profilePhotoUpload = asyncHandler(async (req, res) => {
+	// get user id
+	const { _id } = req.user;
+	// first get image path
+	const localPath = `public/images/profile/${req.file.filename}`;
+
+	// upload image to cloudinary
+	const result = await cloudinaryUploadImg(localPath);
+	// update user
+	const user = await User.findByIdAndUpdate
+		(_id, { profilePhoto: result.url }, { new: true });
+	// delete image from local
+	fs.unlink(localPath, (err) => {
+		if (err) {
+			console.log(err);
+		}
+	});
+
+	res.json({ msg: "profile photo uploaded" });
+});
 
 module.exports = {
 	register: userRegister,
@@ -397,5 +422,6 @@ module.exports = {
 	generateVerifyEmailToken,
 	accountVerification,
 	forgetPasswordToken,
-	resetPassword
+	resetPassword,
+	pPhotoUpload: profilePhotoUpload
 }
