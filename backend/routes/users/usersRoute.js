@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { register, login, getUsers, getUser, deleteUser, updateUser, userProfile, updatePassword, followUser, unfollowUser, blockUser, unBlockUser, generateVerifyEmailToken, accountVerification, forgetPasswordToken, resetPassword, pPhotoUpload } = require('../../controllers/users/usersController');
 const authMiddleware = require('../../middlewares/auth/authMiddleware');
-const { profilePhotoUpload, profilePhotoResize } = require('../../middlewares/uploads/profilePhotoUpload');
+const { photoUpload, profilePhotoResize } = require('../../middlewares/uploads/photoUpload');
 
 // Register
 router.post('/register', register);
@@ -10,7 +10,7 @@ router.post('/register', register);
 router.post('/login', login);
 // Forget Password TOKEN
 router.put('/profilePhoto-upload',
-	profilePhotoUpload.single('image'),
+	photoUpload.single('image'),
 	authMiddleware,
 	profilePhotoResize,
 	pPhotoUpload

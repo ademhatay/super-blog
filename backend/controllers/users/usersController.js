@@ -397,7 +397,7 @@ const profilePhotoUpload = asyncHandler(async (req, res) => {
 	const user = await User.findByIdAndUpdate
 		(_id, { profilePhoto: result.url }, { new: true });
 	// delete image from local
-	fs.unlink(localPath, (err) => {
+	fs.unlinkSync(localPath, (err) => {
 		if (err) {
 			console.log(err);
 		}
