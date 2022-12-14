@@ -1,12 +1,14 @@
 const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
-	title: { type: String,
-		required: true,
-		trim: true },
+	title: {
+		type: String,
+		required: [true, "Post title is required"],
+		trim: true
+	},
 	category: {
 		type: String,
-		required: [true, 'Category is required'],
+		required: [true, "Post category is required"],
 		default: 'All'
 	},
 	isLiked: {

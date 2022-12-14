@@ -120,10 +120,117 @@ const deletePost = asyncHandler(async (req, res) => {
 });
 
 
+// ----------------- Likes -------------------------
+// -------------------------------------------------
+const toggleAddLikePost = asyncHandler(async (req, res) => {
+	//1.Find the post to be liked
+	const { postId } = req.body;
+	const post = await Post.findById(postId);
+	//2. Find the login user
+	const loginUserId = req?.user?._id;
+	//3. Find is this user has liked this post?
+	const isLiked = post?.isLiked;
+	//4.Chech if this user has dislikes this post
+	const alreadyDisliked = post?.dislikes?.find(
+		userId => userId?.toString() === loginUserId?.toString()
+	);
+	//5.remove the user from dislikes array if exists
+	if (alreadyDisliked) {
+		const post = await Post.findByIdAndUpdate(
+			postId,
+			{
+				$pull: { dislikes: loginUserId },
+				isDisLiked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
+	//Toggle
+	//Remove the user if he has liked the post
+	if (isLiked) {
+		const post = await Post.findByIdAndUpdate(
+			postId,
+			{
+				$pull: { likes: loginUserId },
+				isLiked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	} else {
+		//add to likes
+		const post = await Post.findByIdAndUpdate(
+			postId,
+			{
+				$push: { likes: loginUserId },
+				isLiked: true,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
+});
+
+
+// ----------------- DisLikes ----------------------
+// -------------------------------------------------
+const toggleAddDislikePost = asyncHandler(async (req, res) => {
+	//1.Find the post to be disLiked
+	const { postId } = req.body;
+	const post = await Post.findById(postId);
+	//2.Find the login user
+	const loginUserId = req?.user?._id;
+	//3.Check if this user has already disLikes
+	const isDisLiked = post?.isDisliked;
+	//4. Check if already like this post
+	const alreadyLiked = post?.likes?.find(
+		userId => userId.toString() === loginUserId?.toString()
+	);
+	//Remove this user from likes array if it exists
+	if (alreadyLiked) {
+		const post = await Post.findOneAndUpdate(
+			postId,
+			{
+				$pull: { likes: loginUserId },
+				isLiked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
+	//Toggling
+	//Remove this user from dislikes if already disliked
+	if (isDisLiked) {
+		const post = await Post.findByIdAndUpdate(
+			postId,
+			{
+				$pull: { dislikes: loginUserId },
+				isDisliked: false,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	} else {
+		const post = await Post.findByIdAndUpdate(
+			postId,
+			{
+				$push: { dislikes: loginUserId },
+				isDisliked: true,
+			},
+			{ new: true }
+		);
+		res.json(post);
+	}
+
+});
+
 module.exports = {
 	createPost,
 	getAllPosts,
 	getSinglePost,
 	updatePost,
-	deletePost
+	deletePost,
+	toggleAddLikePost,
+	toggleAddDislikePost,
 };
