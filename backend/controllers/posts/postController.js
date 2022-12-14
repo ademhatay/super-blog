@@ -71,7 +71,7 @@ const getSinglePost = asyncHandler(async (req, res) => {
 	validateMongodbID(id);
 
 	try {
-		const post = await Post.findById(id).populate('user');
+		const post = await Post.findById(id).populate('user').populate('dislikes').populate('likes');
 		// update number of views
 		await Post.findByIdAndUpdate(id, {
 			$inc: { numViews: 1 },
