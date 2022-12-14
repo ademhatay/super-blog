@@ -6,6 +6,8 @@ const validateMongodbID = require('../../utils/validateMongodbID');
 const cloudinaryUploadImg = require('../../utils/cloudinary');
 const fs = require('fs');
 
+// ------------------ CREATE POST ------------------
+// -------------------------------------------------
 const createPost = asyncHandler(async (req, res) => {
 	const { _id } = req.user;
 	// validateMongodbID(req.body.user);
@@ -50,7 +52,78 @@ const createPost = asyncHandler(async (req, res) => {
 	});
 });
 
-module.exports = {
-	createPost
-};
 
+// ------------------ GET ALL POST -----------------
+// -------------------------------------------------
+const getAllPosts = asyncHandler(async (req, res) => {
+	try {
+		const posts = await Post.find({}).populate('user');
+		res.json(posts);
+	} catch (error) {
+		res.json(error);
+	}
+});
+
+// --------------- GET SINGLE POST -----------------
+// -------------------------------------------------
+const getSinglePost = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongodbID(id);
+
+	try {
+		const post = await Post.findById(id).populate('user');
+		// update number of views
+		await Post.findByIdAndUpdate(id, {
+			$inc: { numViews: 1 },
+		}, { new: true });
+		res.json(post);
+	} catch (error) {
+		res.json(error);
+	}
+});
+
+// ----------------- UPDATE POST -------------------
+// -------------------------------------------------
+const updatePost = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongodbID(id);
+
+	try {
+		const post = await Post.findByIdAndUpdate(
+			id,
+			{
+				...req.body,
+				user: req.user?._id,
+			},
+			{
+				new: true,
+			}
+		);
+		res.json(post);
+	} catch (error) {
+		res.json(error);
+	}
+});
+
+
+// ----------------- DELETE POST -------------------
+// -------------------------------------------------
+const deletePost = asyncHandler(async (req, res) => {
+	const { id } = req.params;
+	validateMongodbID(id);
+	try {
+		const post = await Post.findOneAndDelete(id);
+		res.json(post);
+	} catch (error) {
+		res.json(error);
+	}
+});
+
+
+module.exports = {
+	createPost,
+	getAllPosts,
+	getSinglePost,
+	updatePost,
+	deletePost
+};

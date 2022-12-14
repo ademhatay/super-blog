@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
 	title: { type: String,
-		// required: true,
+		required: true,
 		trim: true },
 	category: {
 		type: String,
-		// required: [true, 'Category is required'],
+		required: [true, 'Category is required'],
 		default: 'All'
 	},
 	isLiked: {
@@ -42,7 +42,7 @@ const postSchema = mongoose.Schema({
 	],
 	description: {
 		type: String,
-		// required: [true, 'Description is required'],
+		required: [true, 'Description is required'],
 	},
 	image: {
 		type: String,

@@ -100,6 +100,14 @@ const userSchema = new mongoose.Schema({
 	}
 );
 
+// virtual method to populate created posts
+userSchema.virtual('posts', {
+	ref: 'Post',
+	foreignField: 'user',
+	localField: '_id',
+});
+
+
 // Match user entered password to hashed password in database
 userSchema.methods.matchPassword = async function (enteredPassword) {
 	return await bcrypt.compare(enteredPassword, this.password);
