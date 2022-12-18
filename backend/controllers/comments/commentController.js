@@ -3,11 +3,14 @@ const Comment = require('../../models/comment/Comment');
 const validateMongodbID = require('../../utils/validateMongodbID');
 
 // ------------------ Create Comment ------------------ //
-const createComment = asyncHandler(async (req, res) => {
+const createComment = asyncHandler(async(req, res) => {
     // 1 get user
     const user = req.user;
     // 2 get post id
-    const {postId, description} = req.body;
+    const {
+        postId,
+        description
+    } = req.body;
     validateMongodbID(postId);
     // 3 create comment
     try {
@@ -24,9 +27,11 @@ const createComment = asyncHandler(async (req, res) => {
 });
 
 // ------------------ GetAll Comments ------------------ //
-const getAllComments = asyncHandler(async (req, res) => {
+const getAllComments = asyncHandler(async(req, res) => {
     try {
-        const comments = await Comment.find({}).sort({createdAt: -1}).populate('post');
+        const comments = await Comment.find({}).sort({
+            createdAt: -1
+        }).populate('post');
         res.status(200).json(comments);
     } catch (error) {
         res.status(400);
@@ -35,8 +40,10 @@ const getAllComments = asyncHandler(async (req, res) => {
 });
 
 // ---------------- Get Single Comment ---------------- //
-const getSingleComment = asyncHandler(async (req, res) => {
-    const {id} = req.params;
+const getSingleComment = asyncHandler(async(req, res) => {
+    const {
+        id
+    } = req.params;
     validateMongodbID(id);
     try {
         const comment = await Comment.findById(id).populate('post');
@@ -48,28 +55,53 @@ const getSingleComment = asyncHandler(async (req, res) => {
 });
 
 // ------------------ Update ------------------ //
-const updateComment = asyncHandler(async (req, res) => {
-    const {id} = req.params;
+const updateComment = asyncHandler(async(req, res) => {
+    const {
+        id
+    } = req.params;
     validateMongodbID(id);
 
     try {
         const comment = await Comment.findByIdAndUpdate(id, {
-            post: req.body.postId,
-            description: req.body.description
+            post: req.body?.postId,
+            user: req?.user,
+            description: req?.body?.description,
         }, {
             new: true,
-        })
+            runValidators: true,
+        });
+        res.json(comment);
     } catch (error) {
         throw new Error('Comment not updated');
         res.status(400);
     }
-
-    res.json('update comment');
 });
+
+// ------------------ Delete ------------------ //
+const deleteComment = asyncHandler(async(req, res) => {
+    const {
+        id
+    } = req.params;
+    validateMongodbID(id);
+
+    try {
+        const comment = await Comment.findOneAndDelete(id);
+        res.json({
+            message: "deleted",
+            comment
+        })
+    } catch (error) {
+        throw new Error('Comment not deleted');
+        res.status(400);
+    }
+
+});
+
 
 module.exports = {
     createComment,
     getAllComments,
     getSingleComment,
-    updateComment
+    updateComment,
+    deleteComment
 };
