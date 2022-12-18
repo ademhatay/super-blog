@@ -2,9 +2,18 @@ const asyncHandler = require('express-async-handler')
 const emailMessage = require('../../models/emailMessage/emailMessage');
 const validateMongodbID = require('../../utils/validateMongodbID');
 const nodemailer = require('nodemailer');
+const Filterer = require('bad-words');
+
 
 const sendEmailMessage = asyncHandler(async (req, res) => {
 	const {to, subject, message} = req.body;
+
+	const emailMessage = subject + ' ' + message;
+	const filter = new Filterer();
+
+	const isProfane = filter.isProfane(emailMessage);
+	if (isProfane) throw new Error("Email sent failed because used bad-words")
+
 	try {
 		// build message
 		let transporter = nodemailer.createTransport({
