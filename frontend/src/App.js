@@ -11,15 +11,15 @@ const App = () => {
 				<div className='text-2xl lg:text-3xl text-white text-center'>
 					<p className='text-2xl lg:text-4xl mb-5'>
 						<span className='text-orange-500'>Create </span>
-						your post and share it with the world!
+						your post and share it with the <span className='bg-orange-500'>world</span>!
 					</p>
 					<p className='text-2xl lg:text-4xl my-5'>
 						<span className='text-green-500'>Change </span>
-						the world with your ideas!
+						the <span className='bg-orange-500'>world</span> with your ideas!
 					</p>
 					<p className='text-2xl lg:text-4xl mt-5'>
 						<span className='text-blue-500'>Upgrading </span>
-						your skills is the best way to change the world!
+						your skills is the best way to change the <span className='bg-orange-500'>world</span>!
 					</p>
 				</div>
 			</div>

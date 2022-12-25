@@ -31,7 +31,7 @@ const Login = () => {
 				</div>
 				<div className="input-group flex my-3 flex-col items-center">
 					<button className='border w-10/12 lg:w-1/2 py-2 rounded-lg bg-orange-400 text-white font-bold'>
-						Register
+						Dive In Real World!
 					</button>
 				</div>
 			</form>
