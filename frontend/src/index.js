@@ -2,6 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
+import { Provider } from "react-redux";
+import store from "./app/store";
+
 import {
 	createBrowserRouter,
 	RouterProvider,
@@ -18,7 +21,7 @@ const router = createBrowserRouter([
 		path: "auth",
 		element: <AuthRoot />,
 		children: [
-			{index: true, element: <AuthIndex />},
+			{ index: true, element: <AuthIndex /> },
 			{
 				path: "register",
 				element: <Register />
@@ -33,7 +36,7 @@ const router = createBrowserRouter([
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-	<React.StrictMode>
+	<Provider store={store}>
 		<RouterProvider router={router} />
-	</React.StrictMode>
+	</Provider>
 );

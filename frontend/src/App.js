@@ -4,6 +4,7 @@ import groovyWalkAnimation from "./assets/world.json";
 import { Link } from 'react-router-dom';
 
 const App = () => {
+
 	return <>
 		<section className="w-screen h-screen max-h-screen bg-gray-800 flex flex-col lg:flex-row">
 			<div className="w-full lg:w-2/3 h-full flex flex-col justify-evenly items-center px-4 lg:px-0">

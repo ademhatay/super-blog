@@ -1,8 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { registerUserAction } from '../../app/slices/users/usersSlices';
+import { useEffect } from 'react';
 
 // Register form validation schema
 
@@ -15,17 +17,40 @@ const validationSchema = Yup.object({
 
 const Register = () => {
 
+	// Redux dispatch
+	const dispatch = useDispatch();
+
+	// Redux state
+	const { loading, appError, serverError, registered } = useSelector(state => state?.users);
+
+
+	// navigate
+	const navigate = useNavigate();
+
+	// Redirect to dashboard if user is already logged in
+	useEffect(() => {
+		if (registered) {
+			alert('User registered successfully, you can now login');
+			navigate('/auth/login');
+		}
+	}, [registered, navigate])
+
+
 	// Formik form state and methods
 	const formik = useFormik({
 		initialValues: {
-			firstName: '',
-			lastName: '',
-			email: '',
-			password: ''
+			firstName: 'a',
+			lastName: 'a',
+			email: 'test@test.com',
+			password: '123456'
 		},
 		validationSchema,
 		onSubmit: values => {
-			console.log(values);
+			try {
+				dispatch(registerUserAction(values));
+			} catch (error) {
+				console.log(error);
+			}
 			formik.resetForm();
 		}
 	});
@@ -98,8 +123,22 @@ const Register = () => {
 						type='submit'
 						onClick={formik.handleSubmit}
 						className='border w-10/12 lg:w-1/2 py-2 rounded-lg bg-orange-400 text-white font-bold'>
-						Register
+						{
+							loading ? <div className='flex justify-center items-center'>
+								<svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+									<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+									<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z"></path>
+								</svg>
+								Loading...
+							</div> : 'Register'
+
+						}
 					</button>
+					{
+						appError || serverError ? <p className='text-red-400 text-base lg:text-lg mt-3 font-bold'>
+							{serverError} - {appError}
+						</p> : null
+					}
 				</div>
 			</form>
 		</div>
