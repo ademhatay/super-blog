@@ -24,40 +24,84 @@ export const registerUserAction = createAsyncThunk(
 	}
 );
 
-// register user slice
+// login user action
 
-const registerUserSlice = createSlice({
-	name: 'users/register',
+export const loginUserAction = createAsyncThunk(
+	'user/login',
+	async (user, { rejectWithValue, getState, dispatch }) => {
+		try {
+			const config = {
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			};
+			const { data } = await axios.post(`${API_URL}/api/users/login`, user, config);
+
+			// set data to local storage
+			localStorage.setItem('userInfo', JSON.stringify(data));
+			return data;
+		} catch (error) {
+			if (!error?.response) {
+				throw error;
+			}
+			return rejectWithValue(error.response.data);
+		}
+	}
+);
+
+
+console.log(localStorage.getItem('userInfo'));
+
+// if user is logged in, get user info from local storage else set to null
+const userLoginFromStorage = localStorage.getItem('userInfo')
+	? JSON.parse(localStorage.getItem('userInfo'))
+	: null;
+
+//slices
+const usersSlices = createSlice({
+	name: "users",
 	initialState: {
-		user: null,
-		loading: false,
-		appError: undefined,
-		serverError: undefined,
-		registered: false,
+		userAuth: userLoginFromStorage,
 	},
-	extraReducers: (builder) => {
-		builder.addCase(registerUserAction.pending, (state) => {
+	extraReducers: builder => {
+		//register
+		builder.addCase(registerUserAction.pending, (state, action) => {
 			state.loading = true;
-			state.user = null;
-			state.appError = undefined;
-			state.serverError = undefined;
-			state.registered = false;
+			state.appErr = undefined;
+			state.serverErr = undefined;
 		});
 		builder.addCase(registerUserAction.fulfilled, (state, action) => {
 			state.loading = false;
-			state.user = action?.payload;
-			state.appError = undefined;
-			state.serverError = undefined;
-			state.registered = true;
+			state.registered = action?.payload;
+			state.appErr = undefined;
+			state.serverErr = undefined;
 		});
 		builder.addCase(registerUserAction.rejected, (state, action) => {
+			console.log(action.payload);
 			state.loading = false;
-			state.user = null;
-			state.appError = action?.payload?.message;
-			state.serverError = action?.error?.message;
-			state.registered = false;
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+		});
+
+		//login
+		builder.addCase(loginUserAction.pending, (state, action) => {
+			state.loading = true;
+			state.appErr = undefined;
+			state.serverErr = undefined;
+		});
+		builder.addCase(loginUserAction.fulfilled, (state, action) => {
+			state.userAuth = action?.payload;
+			state.loading = false;
+			state.appErr = undefined;
+			state.serverErr = undefined;
+		});
+		builder.addCase(loginUserAction.rejected, (state, action) => {
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			state.loading = false;
 		});
 	},
 });
 
-export default registerUserSlice.reducer;
+
+export default usersSlices.reducer;

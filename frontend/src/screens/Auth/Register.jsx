@@ -39,10 +39,10 @@ const Register = () => {
 	// Formik form state and methods
 	const formik = useFormik({
 		initialValues: {
-			firstName: 'a',
-			lastName: 'a',
-			email: 'test@test.com',
-			password: '123456'
+			firstName: '',
+			lastName: '',
+			email: '',
+			password: ''
 		},
 		validationSchema,
 		onSubmit: values => {
