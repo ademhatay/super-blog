@@ -1,14 +1,11 @@
 import React from 'react'
-import Navbar from './Navbar/Navbar'
+import Navbar from './Navbar'
 
 const Container = ({ children }) => {
 	return <>
 		<Navbar />
 		<div>
 			{children}
-		</div>
-		<div>
-			Footer
 		</div>
 	</>
 }

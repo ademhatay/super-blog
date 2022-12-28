@@ -10,20 +10,19 @@ const Logout = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// create a timer to redirect to home page after 5 and show a countdown
 	useEffect(() => {
 		const timer = setTimeout(() => {
 			setCount(count - 1);
 			if (count === 0) {
+				// logout the user
+				dispatch(logoutUserAction())
 				// stop the timer
 				clearTimeout(timer);
-				// remove user from redux store
-				dispatch(logoutUserAction())
 				// redirect to home page
 				navigate('/');
 			}
 		}, 1000);
-	}, [count]);
+	}, [count, dispatch, navigate]);
 
 
 	return <>

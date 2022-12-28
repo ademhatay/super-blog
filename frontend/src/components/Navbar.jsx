@@ -1,13 +1,37 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
+
+
+const menu = [
+	{
+		name: 'Dashboard',
+		link: '/dashboard'
+	},
+	{
+		name: 'Live Posts',
+		link: '/live-posts'
+	},
+	{
+		name: 'Create Post',
+		link: '/create-post'
+	}
+]
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [isProfileOpen, setIsProfileOpen] = useState(false);
 
-	const navigate = useNavigate();
+	const { pathname } = useLocation();
+
+	const isActive = (path) => {
+		if (pathname === path) {
+			return 'text-white'
+		} else {
+			return 'text-teal-200 hover:text-white'
+		}
+	}
 
 	const { userAuth } = useSelector(state => state?.users);
 
@@ -23,15 +47,19 @@ const Navbar = () => {
 			</div>
 			<div className={`w-full ${isOpen ? 'block' : 'hidden'} flex-grow lg:flex lg:items-center lg:w-auto`}>
 				<div className="text-lg flex flex-col text-center items-center lg:block lg:flex-row  lg:flex-grow justify-center lg:text-left">
-					<Link to="/dashboard" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white lg:mr-4 w-1/2 lg:w-auto">
-						Dashboard
-					</Link>
-					<Link to="/live-posts" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white lg:mr-4  w-1/2 lg:w-auto">
-						Live Posts
-					</Link>
-					<Link to="/create-post" className="block  mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white  w-1/2 lg:w-auto">
-						Create Post
-					</Link>
+					{
+						menu.map((item, index) => (
+							<Link key={index} to={item.link} className={`block mt-4 lg:inline-block lg:mt-0 hover:text-white lg:mr-4 w-1/2 lg:w-auto ${isActive(item.link)} `}>
+								{item.name}
+							</Link>
+						))
+					}
+
+					{
+						userAuth?.isAdmin && <Link to="/admin" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white lg:mr-4  w-1/2 lg:w-auto">
+							Admin Panel
+						</Link>
+					}
 				</div>
 				<div className='flex flex-col w-1/2 lg:w-auto mx-auto mt-5 lg:mt-0  lg:mx-0 lg:flex-row'>
 					<div className="relative inline-block text-left">
