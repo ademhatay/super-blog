@@ -20,7 +20,15 @@ const App = () => {
 					</p>
 					<p className='text-2xl lg:text-4xl mt-5'>
 						<span className='text-blue-500'>Upgrading </span>
-						your skills is the best way to change the <span className='bg-orange-500'>world</span>!
+						your skills and change the <span className='bg-orange-500'>world</span>!
+					</p>
+					<p className='text-2xl lg:text-4xl mt-5'>
+						<span className='text-purple-500'>Discover, Enjoy & Write, </span>
+						this <span className='bg-orange-500'>world</span> different!
+					</p>
+					<p className='text-2xl lg:text-4xl my-5'>
+						<span className='text-red-500'>Join </span>
+						the <span className='bg-orange-500'>world</span> of <span className='text-orange-500'>Write & Share</span>!
 					</p>
 				</div>
 			</div>

@@ -9,7 +9,7 @@ import {
 	createBrowserRouter,
 	RouterProvider,
 } from "react-router-dom";
-import { AuthIndex, AuthRoot, Login, Register } from './screens';
+import { AuthIndex, AuthRoot, Login, Dashboard, Register } from './screens';
 
 
 const router = createBrowserRouter([
@@ -33,8 +33,8 @@ const router = createBrowserRouter([
 		]
 	},
 	{
-		path: "profile",
-		element: <>Profile</>,
+		path: "dashboard",
+		element: <Dashboard />
 	}
 ]);
 

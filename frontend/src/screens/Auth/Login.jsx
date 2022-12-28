@@ -26,7 +26,7 @@ const Login = () => {
 	// Redirect to home if user is authenticated with useEffect
 	useEffect(() => {
 		if (userAuth) {
-			navigate('/profile');
+			navigate('/dashboard');
 		}
 	}, [userAuth, navigate]);
 	
