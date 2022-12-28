@@ -7,7 +7,7 @@ const App = () => {
 
 	return <>
 		<section className="w-screen h-screen max-h-screen bg-gray-800 flex flex-col lg:flex-row">
-			<div className="w-full lg:w-2/3 h-full flex flex-col justify-evenly items-center px-4 lg:px-0">
+			<div className="max-w-full lg:w-2/3 flex flex-col justify-evenly items-center px-4 lg:px-0">
 				<h1 className="text-4xl lg:text-8xl font-semibold text-orange-500">Write <span className='text-2xl'>&</span> Share</h1>
 				<div className='text-2xl lg:text-3xl text-white text-center'>
 					<p className='text-2xl lg:text-4xl mb-5'>

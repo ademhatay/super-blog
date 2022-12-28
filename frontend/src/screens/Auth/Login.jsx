@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import { loginUserAction } from '../../app/slices/users/usersSlices'
@@ -13,12 +13,23 @@ const validationSchema = Yup.object({
 
 const Login = () => {
 
+	// Navigate
+	const navigate = useNavigate();
+
 	// Redux dispatch
 	const dispatch = useDispatch();
 
 	// Redux state
-	const { loading, appError, serverError, user } = useSelector(state => state?.users);
+	const { loading, appErr, serverErr, userAuth } = useSelector(state => state?.users);
 
+	
+	// Redirect to home if user is authenticated with useEffect
+	useEffect(() => {
+		if (userAuth) {
+			navigate('/profile');
+		}
+	}, [userAuth, navigate]);
+	
 
 	// Formik form state and methods
 	const formik = useFormik({
@@ -86,8 +97,8 @@ const Login = () => {
 						}
 					</button>
 					{
-						appError || serverError ? <p className='text-red-400 text-base lg:text-lg mt-3 font-bold'>
-							{serverError} - {appError}
+						appErr || serverErr ? <p className='text-red-400 text-base lg:text-lg mt-3 font-bold'>
+							{serverErr} - {appErr}
 						</p> : null
 					}
 				</div>

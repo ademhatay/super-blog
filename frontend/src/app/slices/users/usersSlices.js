@@ -50,8 +50,6 @@ export const loginUserAction = createAsyncThunk(
 );
 
 
-console.log(localStorage.getItem('userInfo'));
-
 // if user is logged in, get user info from local storage else set to null
 const userLoginFromStorage = localStorage.getItem('userInfo')
 	? JSON.parse(localStorage.getItem('userInfo'))
