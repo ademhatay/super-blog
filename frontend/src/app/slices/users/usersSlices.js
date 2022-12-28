@@ -3,7 +3,6 @@ import axios from "axios";
 import { API_URL } from "../../../constants";
 
 // register user action
-
 export const registerUserAction = createAsyncThunk(
 	'users/register',
 	async (user, { rejectWithValue, getState, dispatch }) => {
@@ -25,7 +24,6 @@ export const registerUserAction = createAsyncThunk(
 );
 
 // login user action
-
 export const loginUserAction = createAsyncThunk(
 	'user/login',
 	async (user, { rejectWithValue, getState, dispatch }) => {
@@ -48,6 +46,23 @@ export const loginUserAction = createAsyncThunk(
 		}
 	}
 );
+
+
+// logout user action
+export const logoutUserAction = createAsyncThunk(
+	'user/logout',
+	async (payload, { rejectWithValue, getState, dispatch }) => {
+		try {
+			localStorage.removeItem('userInfo');
+		} catch (error) {
+			if (!error?.response) {
+				throw error;
+			}
+			return rejectWithValue(error.response.data);
+		}
+	}
+)
+
 
 
 // if user is logged in, get user info from local storage else set to null
@@ -97,6 +112,22 @@ const usersSlices = createSlice({
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
 			state.loading = false;
+		});
+
+		// logout
+		builder.addCase(logoutUserAction.pending, (state, action) => {
+			state.loading = true;
+		});
+		builder.addCase(logoutUserAction.fulfilled, (state, action) => {
+			state.userAuth = null;
+			state.loading = false;
+			state.appErr = undefined;
+			state.serverErr = undefined;
+		});
+		builder.addCase(logoutUserAction.rejected, (state, action) => {
+			state.loading = false;
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
 		});
 	},
 });

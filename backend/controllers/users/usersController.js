@@ -41,6 +41,7 @@ const userLogin = asyncHandler(async (req, res) => {
 			firstName: userFound?.firstName,
 			lastName: userFound?.lastName,
 			email: userFound?.email,
+			isAdmin: userFound?.isAdmin,
 			profilePhoto: userFound?.profilePhoto,
 			token: generateToken(userFound?._id),
 		}
