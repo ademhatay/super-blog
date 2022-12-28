@@ -21,7 +21,7 @@ const Register = () => {
 	const dispatch = useDispatch();
 
 	// Redux state
-	const { loading, appError, serverError, registered } = useSelector(state => state?.users);
+	const { loading, appErr, serverErr, registered } = useSelector(state => state?.users);
 
 
 	// navigate
@@ -135,8 +135,8 @@ const Register = () => {
 						}
 					</button>
 					{
-						appError || serverError ? <p className='text-red-400 text-base lg:text-lg mt-3 font-bold'>
-							{serverError} - {appError}
+						appErr || serverErr ? <p className='text-red-400 text-base lg:text-lg mt-3 font-bold'>
+							{serverErr} - {appErr}
 						</p> : null
 					}
 				</div>

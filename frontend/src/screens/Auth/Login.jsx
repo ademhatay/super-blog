@@ -34,8 +34,8 @@ const Login = () => {
 	// Formik form state and methods
 	const formik = useFormik({
 		initialValues: {
-			email: 'adem@123.com',
-			password: '123456'
+			email: '',
+			password: ''
 		},
 		validationSchema,
 		onSubmit: values => {
@@ -82,9 +82,10 @@ const Login = () => {
 				</div>
 				<div className="input-group flex my-3 flex-col items-center">
 					<button
+						disabled={loading || !formik.isValid || !formik.dirty}
 						onClick={formik.handleSubmit}
 						type='submit'
-						className='border w-10/12 lg:w-1/2 py-2 rounded-lg bg-orange-400 text-white font-bold'>
+						className='border w-10/12 lg:w-1/2 py-2 rounded-lg bg-orange-400 text-white font-bold disabled:bg-gray-400'>
 						{
 							loading ? <div className='flex justify-center items-center'>
 								<svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
