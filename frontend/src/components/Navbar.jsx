@@ -56,7 +56,7 @@ const Navbar = () => {
 					}
 
 					{
-						userAuth?.isAdmin && <Link to="/admin" className="block mt-4 lg:inline-block lg:mt-0 text-teal-200 hover:text-white lg:mr-4  w-1/2 lg:w-auto">
+						userAuth?.isAdmin && <Link to="/admin" className={`block mt-4 lg:inline-block lg:mt-0  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('admin') ? 'text-white': 'text-teal-200'} `}>
 							Admin Panel
 						</Link>
 					}

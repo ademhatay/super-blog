@@ -8,7 +8,7 @@ import {
 	createBrowserRouter,
 	RouterProvider,
 } from "react-router-dom";
-import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout } from './screens';
+import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments } from './screens';
 
 
 const router = createBrowserRouter([
@@ -37,7 +37,38 @@ const router = createBrowserRouter([
 	},
 	{
 		path: "dashboard",
-		element: <Dashboard />
+		element: <Dashboard />,
+	},
+	{
+		path: 'admin',
+		element: <Admin />,
+		children: [
+			{index: true, element: <Stats />},
+			{
+				path: 'create-category',
+				element: <CreateCategory />
+			},
+			{
+				path: 'choose-topic',
+				element: <ChooseTopic />
+			},
+			{
+				path: 'manage-users',
+				element: <ManageUsers />
+			},
+			{
+				path: 'manage-posts',
+				element: <ManagePosts />
+			},
+			{
+				path: 'manage-comments',
+				element: <ManageComments />
+			},
+		]
+	},
+	{
+		path: 'live-posts',
+		element: <LivePosts />,
 	}
 ]);
 
