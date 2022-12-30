@@ -14,6 +14,9 @@ export { default as ManageUsers } from './Admin/ManageUsers'
 export { default as ManagePosts } from './Admin/ManagePosts'
 export { default as ManageComments } from './Admin/ManageComments'
 
+// public
+export { default as PublicCategory } from './Public/PublicCategory'
+
 
 
 export { default as LivePosts } from './LivePostsScreen'

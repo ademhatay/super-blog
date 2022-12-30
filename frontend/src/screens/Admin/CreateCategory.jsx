@@ -21,8 +21,14 @@ const CreateCategory = () => {
 		validationSchema,
 		onSubmit: (values) => {
 			dispatch(createCategoryAction(values));
+			formik.resetForm();
 		},
 	});
+
+	const { loading, appErr, serverErr } = useSelector(state => state?.category);
+
+
+
 
 
 	return <>
@@ -44,16 +50,27 @@ const CreateCategory = () => {
 								placeholder='Category Name'
 								className='border-2 mt-3 border-gray-300 rounded-md p-2'
 							/>
-							<button
-								type='submit'
-								className='bg-green-400 text-white p-2 rounded-md'>
-								Add Category
-							</button>
 							{
 								formik.touched.title && formik.errors.title ? (
 									<div className='text-red-500 text-center text-lg'>{formik.errors.title}</div>
 								) : null
 							}
+							<button
+								type='submit'
+								className='bg-green-400 text-white p-2 rounded-md'>
+								{
+									loading ? (
+										<div className='flex justify-center'>
+											<div className='animate-spin rounded-full h-5 w-5 border-b-2 border-gray-900'></div> Loading...
+										</div>
+									) : 'Create New Category'
+								}
+							</button>
+
+							{
+								appErr || serverErr ? <h2 className='text-red-500 text-center text-lg'>{appErr || serverErr}</h2> : null
+							}
+
 						</form>
 
 					</div>
@@ -62,7 +79,7 @@ const CreateCategory = () => {
 					<div className='text-3xl text-center font-bold italic '>
 						Manage Category
 					</div>
-					<div>
+					<div className='overflow-y-auto  max-h-48'>
 						<table className='w-full'>
 							<thead>
 								<tr>
@@ -110,6 +127,43 @@ const CreateCategory = () => {
 										</button>
 									</td>
 								</tr>
+								<tr className='text-center'>
+									<td className='border-b border-gray-200 p-2'>3</td>
+									<td className='border-b border-gray-200 p-2'>Category Name 3</td>
+									<td className='border-b flex justify-evenly border-gray-200 p-2'>
+										<button className='bg-green-400 text-white p-1 rounded-md'>
+											Update
+										</button>
+										<button className='bg-red-400 text-white p-1 rounded-md'>
+											Delete
+										</button>
+									</td>
+								</tr>
+								<tr className='text-center'>
+									<td className='border-b border-gray-200 p-2'>3</td>
+									<td className='border-b border-gray-200 p-2'>Category Name 3</td>
+									<td className='border-b flex justify-evenly border-gray-200 p-2'>
+										<button className='bg-green-400 text-white p-1 rounded-md'>
+											Update
+										</button>
+										<button className='bg-red-400 text-white p-1 rounded-md'>
+											Delete
+										</button>
+									</td>
+								</tr>
+								<tr className='text-center'>
+									<td className='border-b border-gray-200 p-2'>3</td>
+									<td className='border-b border-gray-200 p-2'>Category Name 3</td>
+									<td className='border-b flex justify-evenly border-gray-200 p-2'>
+										<button className='bg-green-400 text-white p-1 rounded-md'>
+											Update
+										</button>
+										<button className='bg-red-400 text-white p-1 rounded-md'>
+											Delete
+										</button>
+									</td>
+								</tr>
+
 							</tbody>
 						</table>
 					</div>

@@ -17,7 +17,6 @@ const menu = [
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [isProfileOpen, setIsProfileOpen] = useState(false);
 
 	const { pathname } = useLocation();
 
@@ -52,23 +51,33 @@ const Navbar = () => {
 							</Link>
 						))
 					}
-	
+
 					{
-						userAuth?.isAdmin && <Link to="/admin" className={`block mt-4 lg:inline-block lg:mt-0  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('admin') ? 'text-white': 'text-teal-200'} `}>
+						userAuth?.isAdmin && <Link to="/admin" className={`block mt-4 lg:inline-block lg:mt-0  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('admin') ? 'text-white' : 'text-teal-200'} `}>
 							Admin Panel
 						</Link>
 					}
- 
+
+					<div className={`group relative block mt-4 lg:inline-block lg:mt-0 cursor-pointer  hover:text-white lg:mr-4  w-1/2 lg:w-auto text-teal-200 `}>
+						Create
+						<div className={`origin-top-right hidden group-hover:block absolute left-0 top-5 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20`}>
+
+							<div className="py-1" role="none">
+								<Link to="/create-post" className="block px-4 py-2  text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Create Post</Link>
+								<Link to="/create-category" className="block px-4 py-2  text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Create Category</Link>
+							</div>
+						</div>
+					</div>
 
 				</div>
 				<div className='flex flex-col w-1/2 lg:w-auto mx-auto mt-5 lg:mt-0  lg:mx-0 lg:flex-row'>
-					<div className="relative inline-block text-left">
+					<div className="relative group inline-block text-left">
 						<div>
-							<button onClick={() => setIsProfileOpen(!isProfileOpen)} type="button" className="inline-flex justify-center w-full   shadow-sm font-semibold text-gray-700 p-0 m-0" id="options-menu" aria-haspopup="true" aria-expanded="true">
+							<div className="inline-flex justify-center w-full   shadow-sm font-semibold text-gray-700 p-0 m-0 cursor-pointer">
 								<img className="w-14 h-14 rounded-full" src={userAuth.profilePhoto} alt="user profile" />
-							</button>
+							</div>
 						</div>
-						<div className={`origin-top-right ${isProfileOpen ? 'block' : 'hidden'} absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+						<div className={`origin-top-right hidden group-hover:block absolute right-0 top-10 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
 							<p className='border-b '>
 								<span className="block px-4 py-2 text-gray-700">
 									{userAuth.firstName} {userAuth.lastName}
