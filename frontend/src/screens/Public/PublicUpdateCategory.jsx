@@ -2,39 +2,56 @@ import { PlusCircleIcon, BookOpenIcon } from "@heroicons/react/solid";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { createCategoryAction } from "../../app/slices/category/categorySlice";
-import { Container } from '../../components'
-import { useNavigate } from "react-router-dom";
+import { fetchSingleCategoryAction, updateCategoryAction, deleteCategoryAction} from "../../app/slices/category/categorySlice";
+import { Container } from '../../components';
+import { useEffect } from "react";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 
 //Form schema
 const formSchema = Yup.object({
 	title: Yup.string().required("Title is required"),
 });
 
-const AddNewCategory = () => {
+const PublicUpdateCategory = () => {
 	const dispatch = useDispatch();
 
-	const navigate = useNavigate();
-	//formik
-	const formik = useFormik({
-		initialValues: {
-			title: "",
-		},
-		onSubmit: values => {
-			//dispath the action
-			dispatch(createCategoryAction(values));
-			//reset form
-			formik.resetForm();
+	const { id } = useParams();
 
-			navigate("/live-categories");
-		},
-		validationSchema: formSchema,
-	});
+	const navigate = useNavigate();
+
+	//fetch category
+	useEffect(() => {
+		dispatch(fetchSingleCategoryAction(id));
+	}, [dispatch, id]);
 
 	//get data from store
 	const state = useSelector(state => state?.category);
 
-	const { loading, appErr, serverErr } = state;
+	const { loading, appErr, serverErr, singleCategory } = state;
+
+	//formik
+	const formik = useFormik({
+		enableReinitialize: true,
+		initialValues: {
+			title: singleCategory?.title || "",
+		},
+		onSubmit: values => {
+			//dispath the action
+			dispatch(updateCategoryAction({ title: values.title, id }));
+			dispatch(fetchSingleCategoryAction(id));
+			navigate("/live-categories")
+			//reset form
+			formik.resetForm();
+		},
+		validationSchema: formSchema,
+	});
+
+
+	const deleteCategory = () => {
+		dispatch(deleteCategoryAction(id));
+		navigate("/live-categories")
+	}
+
 
 	return (
 		<Container>
@@ -43,9 +60,9 @@ const AddNewCategory = () => {
 					<div>
 						<BookOpenIcon className="mx-auto h-12 w-auto" />
 						<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-							Add New Category
+							Update Category
 						</h2>
-						<p className="mt-2 text-center text-sm text-gray-600">
+						<div className="mt-2 text-center text-sm text-gray-600">
 							<p className="font-medium text-indigo-600 hover:text-indigo-500">
 								These are the categories user will select when creating a post
 							</p>
@@ -57,7 +74,7 @@ const AddNewCategory = () => {
 									</h2>
 								) : null}
 							</div>
-						</p>
+						</div>
 					</div>
 					{/* Form */}
 					<form onSubmit={formik.handleSubmit} className="mt-8 space-y-6">
@@ -91,18 +108,18 @@ const AddNewCategory = () => {
 										disabled
 										className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-600 "
 									>
-										<span className="absolute left-0 inset-y-0 flex items-center pl-3">
+										<div className="absolute left-0 inset-y-0 flex items-center pl-3">
 											<PlusCircleIcon
 												className="h-5 w-5 text-yellow-500 group-hover:text-indigo-400"
 												aria-hidden="true"
 											/>
-										</span>
+										</div>
 										Loading please wait...
 									</button>
 								) : (
 									<button
 										type="submit"
-										className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+										className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-yellow-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
 									>
 										<span className="absolute left-0 inset-y-0 flex items-center pl-3">
 											<PlusCircleIcon
@@ -110,10 +127,22 @@ const AddNewCategory = () => {
 												aria-hidden="true"
 											/>
 										</span>
-										Add new Category
+										Update Category
 									</button>
 								)}
 							</div>
+							<button
+								onClick={deleteCategory}
+										className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-5"
+									>
+										<span className="absolute left-0 inset-y-0 flex items-center pl-3">
+											<PlusCircleIcon
+												className="h-5 w-5 text-yellow-500 group-hover:text-indigo-400"
+												aria-hidden="true"
+											/>
+										</span>
+										Delete Category
+									</button>
 						</div>
 					</form>
 				</div>
@@ -122,4 +151,4 @@ const AddNewCategory = () => {
 	);
 };
 
-export default AddNewCategory;
+export default PublicUpdateCategory;

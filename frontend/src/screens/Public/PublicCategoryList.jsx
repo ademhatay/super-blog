@@ -6,13 +6,15 @@ import { PencilAltIcon } from "@heroicons/react/outline";
 
 import { fetchCategoryAction } from "../../app/slices/category/categorySlice";
 import { Container } from "../../components";
+import { DateFormatter } from "../../utils";
 
 const CategoryList = () => {
 	const dispatch = useDispatch();
 	useEffect(() => {
 		dispatch(fetchCategoryAction());
 	}, [dispatch]);
-	const { category, loading, appErr, serverErr } = useSelector(state => state?.category);
+	const { categoryList: category, loading, appErr, serverErr } = useSelector(state => state?.category);
+	const { userAuth } = useSelector(state => state?.users);
 
 	return (
 		<>
@@ -72,7 +74,7 @@ const CategoryList = () => {
 																<img
 																	className="h-10 w-10 rounded-full"
 																	src={category?.user?.profilePhoto}
-																	alt="user image"
+																	alt="user profile"
 																/>
 															</div>
 															<div className="ml-4">
@@ -90,12 +92,16 @@ const CategoryList = () => {
 														{category.title}
 													</td>
 													<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-														{category?.createdAt}
+														{<DateFormatter date={category?.createdAt} />}
 													</td>
 													<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-														<Link to={`/category/${category._id}`}>
-															<PencilAltIcon className="h-5 text-indigo-500" />
-														</Link>
+														{
+															userAuth._id === category?.user?._id && (
+																<Link to={`/category-update/${category._id}`}>
+																	<PencilAltIcon className="h-5 text-indigo-500" />
+																</Link>
+															)
+														}
 													</td>
 												</tr>
 											))}

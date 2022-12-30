@@ -8,7 +8,7 @@ import {
 	createBrowserRouter,
 	RouterProvider,
 } from "react-router-dom";
-import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments, PublicCategoryList, PublicCategory } from './screens';
+import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments, PublicCategoryList, PublicCategory, PublicUpdateCategory } from './screens';
 
 
 const router = createBrowserRouter([
@@ -77,6 +77,10 @@ const router = createBrowserRouter([
 	{
 		path: 'create-category',
 		element: <PublicCategory />
+	},
+	{
+		path: 'category-update/:id',
+		element: <PublicUpdateCategory />
 	}
 ]);
 

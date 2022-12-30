@@ -28,7 +28,7 @@ const CreateCategory = () => {
 			formik.resetForm();
 		},
 	});
-	const { loading, appErr, serverErr, category } = useSelector(state => state?.category);
+	const { loading, appErr, serverErr, categoryList:category } = useSelector(state => state?.category);
 
 	return <>
 		<div className='w-full h-full  bg-gray-50 p-5 '>
