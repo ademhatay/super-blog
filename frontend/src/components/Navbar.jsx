@@ -12,10 +12,6 @@ const menu = [
 	{
 		name: 'Live Posts',
 		link: '/live-posts'
-	},
-	{
-		name: 'Create Post',
-		link: '/create-post'
 	}
 ]
 
@@ -47,6 +43,8 @@ const Navbar = () => {
 			</div>
 			<div className={`w-full ${isOpen ? 'block' : 'hidden'} flex-grow lg:flex lg:items-center lg:w-auto`}>
 				<div className="text-lg flex flex-col text-center items-center lg:block lg:flex-row  lg:flex-grow justify-center lg:text-left">
+
+
 					{
 						menu.map((item, index) => (
 							<Link key={index} to={item.link} className={`block mt-4 lg:inline-block lg:mt-0 hover:text-white lg:mr-4 w-1/2 lg:w-auto ${isActive(item.link)} `}>
@@ -54,12 +52,14 @@ const Navbar = () => {
 							</Link>
 						))
 					}
-
+	
 					{
 						userAuth?.isAdmin && <Link to="/admin" className={`block mt-4 lg:inline-block lg:mt-0  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('admin') ? 'text-white': 'text-teal-200'} `}>
 							Admin Panel
 						</Link>
 					}
+ 
+
 				</div>
 				<div className='flex flex-col w-1/2 lg:w-auto mx-auto mt-5 lg:mt-0  lg:mx-0 lg:flex-row'>
 					<div className="relative inline-block text-left">

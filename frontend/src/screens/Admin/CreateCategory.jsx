@@ -1,6 +1,30 @@
 import React from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { createCategoryAction } from '../../app/slices/category/categorySlice';
+import * as Yup from 'yup';
+import { useFormik } from 'formik';
+
+const validationSchema = Yup.object({
+	title: Yup.string().required('Title is required'),
+});
+
+
 
 const CreateCategory = () => {
+
+	const dispatch = useDispatch();
+
+	const formik = useFormik({
+		initialValues: {
+			title: '',
+		},
+		validationSchema,
+		onSubmit: (values) => {
+			dispatch(createCategoryAction(values));
+		},
+	});
+
+
 	return <>
 		<div className='w-full h-full  bg-gray-50 p-5 '>
 			<h2 className='text-2xl text-center font-bold bg-green-400'>Super Category</h2>
@@ -10,18 +34,28 @@ const CreateCategory = () => {
 						Add New Category
 					</div>
 					<div>
-						<form className='flex flex-col gap-5'>
+						<form onSubmit={formik.handleSubmit} className='flex flex-col gap-5'>
 							<input
 								type='text'
-								name='categoryName'
-								id='categoryName'
+								name='title'
+								value={formik.values.title}
+								onChange={formik.handleChange('title')}
+								onBlur={formik.handleBlur('title')}
 								placeholder='Category Name'
 								className='border-2 mt-3 border-gray-300 rounded-md p-2'
 							/>
-							<button className='bg-green-400 text-white p-2 rounded-md'>
+							<button
+								type='submit'
+								className='bg-green-400 text-white p-2 rounded-md'>
 								Add Category
 							</button>
+							{
+								formik.touched.title && formik.errors.title ? (
+									<div className='text-red-500 text-center text-lg'>{formik.errors.title}</div>
+								) : null
+							}
 						</form>
+
 					</div>
 				</div>
 				<div className='w-full lg:w-8/12 mx-auto flex justify-center  bg-white p-4 my-3 rounded-md shadow-lg flex-col'>

@@ -44,7 +44,7 @@ const AdminScreen = () => {
 	return <>
 		<Container>
 			<div className="flex h-full flex-col lg:flex-row">
-				<div className='w-full lg:w-1/3 bg-gray-300 border-b-2 lg:border-r-2 p-5 flex flex-col items-center justify-center'>
+				<div className='w-full lg:w-1/3 bg-gray-50 border-b-2 lg:border-r-2 p-5 flex flex-col items-center justify-center'>
 					<h2 className='text-2xl font-bold bg-purple-400'>
 						Admin Actions
 					</h2>
