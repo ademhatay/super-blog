@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { createCategoryAction } from '../../app/slices/category/categorySlice';
+import { createCategoryAction, fetchCategoryAction } from '../../app/slices/category/categorySlice';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
 
@@ -14,6 +14,10 @@ const CreateCategory = () => {
 
 	const dispatch = useDispatch();
 
+	useEffect(() => {
+		dispatch(fetchCategoryAction());
+	}, [dispatch]);
+
 	const formik = useFormik({
 		initialValues: {
 			title: '',
@@ -24,12 +28,7 @@ const CreateCategory = () => {
 			formik.resetForm();
 		},
 	});
-
-	const { loading, appErr, serverErr } = useSelector(state => state?.category);
-
-
-
-
+	const { loading, appErr, serverErr, category } = useSelector(state => state?.category);
 
 	return <>
 		<div className='w-full h-full  bg-gray-50 p-5 '>
@@ -89,81 +88,24 @@ const CreateCategory = () => {
 								</tr>
 							</thead>
 							<tbody>
-								<tr className='text-center'>
-									<td className='border-b border-gray-200 p-2'>1</td>
-									<td className='border-b border-gray-200 p-2'>Category Name 1</td>
-									<td className='border-b flex justify-evenly border-gray-200 p-2'>
-										<button className='bg-green-400 text-white p-1 rounded-md'>
-											Update
-										</button>
-										<button className='bg-red-400 text-white p-1 rounded-md'>
-											Delete
-										</button>
-									</td>
-								</tr>
-
-								<tr className='text-center'>
-									<td className='border-b border-gray-200 p-2'>2</td>
-									<td className='border-b border-gray-200 p-2'>Category Name 2</td>
-									<td className='border-b flex justify-evenly border-gray-200 p-2'>
-										<button className='bg-green-400 text-white p-1 rounded-md'>
-											Update
-										</button>
-										<button className='bg-red-400 text-white p-1 rounded-md'>
-											Delete
-										</button>
-									</td>
-								</tr>
-
-								<tr className='text-center'>
-									<td className='border-b border-gray-200 p-2'>3</td>
-									<td className='border-b border-gray-200 p-2'>Category Name 3</td>
-									<td className='border-b flex justify-evenly border-gray-200 p-2'>
-										<button className='bg-green-400 text-white p-1 rounded-md'>
-											Update
-										</button>
-										<button className='bg-red-400 text-white p-1 rounded-md'>
-											Delete
-										</button>
-									</td>
-								</tr>
-								<tr className='text-center'>
-									<td className='border-b border-gray-200 p-2'>3</td>
-									<td className='border-b border-gray-200 p-2'>Category Name 3</td>
-									<td className='border-b flex justify-evenly border-gray-200 p-2'>
-										<button className='bg-green-400 text-white p-1 rounded-md'>
-											Update
-										</button>
-										<button className='bg-red-400 text-white p-1 rounded-md'>
-											Delete
-										</button>
-									</td>
-								</tr>
-								<tr className='text-center'>
-									<td className='border-b border-gray-200 p-2'>3</td>
-									<td className='border-b border-gray-200 p-2'>Category Name 3</td>
-									<td className='border-b flex justify-evenly border-gray-200 p-2'>
-										<button className='bg-green-400 text-white p-1 rounded-md'>
-											Update
-										</button>
-										<button className='bg-red-400 text-white p-1 rounded-md'>
-											Delete
-										</button>
-									</td>
-								</tr>
-								<tr className='text-center'>
-									<td className='border-b border-gray-200 p-2'>3</td>
-									<td className='border-b border-gray-200 p-2'>Category Name 3</td>
-									<td className='border-b flex justify-evenly border-gray-200 p-2'>
-										<button className='bg-green-400 text-white p-1 rounded-md'>
-											Update
-										</button>
-										<button className='bg-red-400 text-white p-1 rounded-md'>
-											Delete
-										</button>
-									</td>
-								</tr>
-
+								{
+									category?.map((item, index) => (
+										<tr key={index} className='text-center'>
+											<td className='border-b border-gray-200 p-2'>{index}</td>
+											<td className='border-b border-gray-200 p-2'>
+												{item.title}
+											</td>
+											<td className='border-b flex justify-evenly border-gray-200 p-2'>
+												<button className='bg-green-400 text-white p-1 rounded-md'>
+													Update
+												</button>
+												<button className='bg-red-400 text-white p-1 rounded-md'>
+													Delete
+												</button>
+											</td>
+										</tr>
+									))
+								}
 							</tbody>
 						</table>
 					</div>

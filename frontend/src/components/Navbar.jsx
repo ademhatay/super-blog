@@ -12,8 +12,13 @@ const menu = [
 	{
 		name: 'Live Posts',
 		link: '/live-posts'
+	},
+	{
+		name: 'Live Categories',
+		link: '/live-categories'
 	}
 ]
+
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);

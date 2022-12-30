@@ -16,6 +16,7 @@ export { default as ManageComments } from './Admin/ManageComments'
 
 // public
 export { default as PublicCategory } from './Public/PublicCategory'
+export { default as PublicCategoryList } from './Public/PublicCategoryList'
 
 
 
