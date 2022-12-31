@@ -11,6 +11,7 @@ export { default as Stats } from './Admin/Stats'
 export { default as CreateCategory } from './Admin/CreateCategory'
 export { default as ChooseTopic } from './Admin/ChooseTopic'
 export { default as ManageUsers } from './Admin/ManageUsers'
+export { default as ManageCategory } from './Admin/ManageCategory'
 export { default as ManagePosts } from './Admin/ManagePosts'
 export { default as ManageComments } from './Admin/ManageComments'
 

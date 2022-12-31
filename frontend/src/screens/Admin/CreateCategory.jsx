@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { createCategoryAction, fetchCategoryAction } from '../../app/slices/category/categorySlice';
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
+import { useNavigate } from 'react-router-dom';
+import { getUser } from '../../utils/isAdmin';
 
 const validationSchema = Yup.object({
 	title: Yup.string().required('Title is required'),
@@ -13,6 +15,20 @@ const validationSchema = Yup.object({
 const CreateCategory = () => {
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const [isAdmin, setIsAdmin] = useState(false);
+	const { userAuth } = useSelector(state => state?.users);
+
+	useEffect(() => {
+		getUser(userAuth).then((res) => {
+			if (res) {
+				setIsAdmin(res?.isAdmin)
+			} else {
+				setIsAdmin(false)
+				navigate('/dashboard')
+			}
+		})
+	}, [userAuth]);
 
 	useEffect(() => {
 		dispatch(fetchCategoryAction());
@@ -26,9 +42,10 @@ const CreateCategory = () => {
 		onSubmit: (values) => {
 			dispatch(createCategoryAction(values));
 			formik.resetForm();
+			navigate('/admin/manage-category');
 		},
 	});
-	const { loading, appErr, serverErr, categoryList:category } = useSelector(state => state?.category);
+	const { loading, appErr, serverErr, categoryList: category } = useSelector(state => state?.category);
 
 	return <>
 		<div className='w-full h-full  bg-gray-50 p-5 '>
@@ -72,42 +89,6 @@ const CreateCategory = () => {
 
 						</form>
 
-					</div>
-				</div>
-				<div className='w-full lg:w-8/12 mx-auto flex justify-center  bg-white p-4 my-3 rounded-md shadow-lg flex-col'>
-					<div className='text-3xl text-center font-bold italic '>
-						Manage Category
-					</div>
-					<div className='overflow-y-auto  max-h-48'>
-						<table className='w-full'>
-							<thead>
-								<tr>
-									<th className='border-b border-gray-200 p-2'>#</th>
-									<th className='border-b border-gray-200 p-2'>Category Name</th>
-									<th className='border-b border-gray-200 p-2'>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								{
-									category?.map((item, index) => (
-										<tr key={index} className='text-center'>
-											<td className='border-b border-gray-200 p-2'>{index}</td>
-											<td className='border-b border-gray-200 p-2'>
-												{item.title}
-											</td>
-											<td className='border-b flex justify-evenly border-gray-200 p-2'>
-												<button className='bg-green-400 text-white p-1 rounded-md'>
-													Update
-												</button>
-												<button className='bg-red-400 text-white p-1 rounded-md'>
-													Delete
-												</button>
-											</td>
-										</tr>
-									))
-								}
-							</tbody>
-						</table>
 					</div>
 				</div>
 			</div>

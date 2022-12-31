@@ -2,7 +2,6 @@ import React from 'react'
 import Lottie from "lottie-react";
 import groovyWalkAnimation from "./assets/world.json";
 import { Link } from 'react-router-dom';
-import { SelectLanguage, SelectTheme } from './components';
 
 const App = () => {
 
@@ -34,15 +33,13 @@ const App = () => {
 						<Link to="/auth" className='w-10/12 py-2 my-3 rounded-lg bg-orange-400 text-white font-bold text-center'>
 							Dive In Now!
 						</Link>
-						<Link to="/craete-post" className='w-10/12 py-2  my-3 rounded-lg bg-slate-800 text-white font-bold text-center'>
-							Write By Guest!
+						<Link to="/dashboard" className='w-10/12 py-2  my-3 rounded-lg bg-slate-800 text-white font-bold text-center'>
+							I am Guest!
 						</Link>
 					</div>
 					<Lottie animationData={groovyWalkAnimation} loop={true} />
 				</div>
 			</section>
-			<SelectLanguage />
-			<SelectTheme />
 	</>
 }
 

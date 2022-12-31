@@ -1,25 +1,47 @@
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import { PencilAltIcon } from "@heroicons/react/outline";
 
 import { fetchCategoryAction } from "../../app/slices/category/categorySlice";
 import { Container } from "../../components";
 import { DateFormatter } from "../../utils";
+import { getUser } from "../../utils/isAdmin";
+
 
 const CategoryList = () => {
+
+	const [isAdmin, setIsAdmin] = useState(false);
+
 	const dispatch = useDispatch();
+	const { userAuth } = useSelector(state => state?.users);
+
+	useEffect(() => {
+		getUser(userAuth).then((res) => {
+			if (res) {
+				setIsAdmin(true)
+			} else {
+				setIsAdmin(false);
+			}
+		})
+		console.log(isAdmin);
+	}, [userAuth]);
+
 	useEffect(() => {
 		dispatch(fetchCategoryAction());
 	}, [dispatch]);
 	const { categoryList: category, loading, appErr, serverErr } = useSelector(state => state?.category);
-	const { userAuth } = useSelector(state => state?.users);
+
 
 	return (
 		<>
 			<Container>
-				{loading ? (
+				{!userAuth ? (
+					<div className="flex items-center justify-center h-full">
+						<h1 className="text-3xl font-bold text-center text-gray-500">You are not authorized to view this page</h1>
+					</div>
+				) : loading ? (
 					<div className="flex justify-center items-center h-screen">
 						<div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
 					</div>
@@ -96,10 +118,12 @@ const CategoryList = () => {
 													</td>
 													<td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 														{
-															userAuth._id === category?.user?._id && (
+															isAdmin ? (
 																<Link to={`/category-update/${category._id}`}>
 																	<PencilAltIcon className="h-5 text-indigo-500" />
 																</Link>
+															) : (
+																"Only Admin Edit"
 															)
 														}
 													</td>

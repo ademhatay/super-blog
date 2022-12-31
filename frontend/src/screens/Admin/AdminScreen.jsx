@@ -1,6 +1,8 @@
-import React from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
 import { Container } from '../../components'
+import { getUser } from '../../utils/isAdmin'
 
 const actions = [
 	{
@@ -24,6 +26,11 @@ const actions = [
 		color: 'bg-purple-400',
 	},
 	{
+		name: 'Manage Category',
+		link: 'manage-category',
+		color: 'bg-pink-400',
+	},
+	{
 		name: 'Manage Users',
 		link: 'manage-users',
 		color: 'bg-green-400',
@@ -41,8 +48,25 @@ const actions = [
 ]
 
 const AdminScreen = () => {
+	const [isAdmin, setIsAdmin] = useState(false)
+	const navigate = useNavigate()
+	const { userAuth } = useSelector((state) => state.users);
+
+	useEffect(() => {
+		getUser(userAuth).then((res) => {
+			if (res) {
+				setIsAdmin(true)
+			} else {
+				navigate('/dashboard')
+			}
+		})
+	}, [userAuth]);
+
+
+
+
 	return <>
-		<Container>
+		{isAdmin && <Container>
 			<div className="flex h-full flex-col lg:flex-row">
 				<div className='w-full lg:w-1/3 bg-gray-50 border-b-2 lg:border-r-2 p-5 flex flex-col items-center justify-center'>
 					<h2 className='text-2xl font-bold bg-purple-400'>
@@ -60,7 +84,7 @@ const AdminScreen = () => {
 
 				<Outlet />
 			</div>
-		</Container>
+		</Container>}
 	</>
 }
 

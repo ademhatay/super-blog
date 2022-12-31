@@ -4,24 +4,40 @@ import { Link, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 
-const menu = [
+const adminDropdown = [
 	{
-		name: 'Dashboard',
-		link: '/dashboard'
+		name: 'Super Stats',
+		link: '/admin'
 	},
 	{
-		name: 'Live Posts',
-		link: '/live-posts'
+		name: 'Weekly Topic',
+		link: '/admin/choose-topic'
 	},
 	{
-		name: 'Live Categories',
-		link: '/live-categories'
+		name: 'Manage Categories',
+		link: '/admin/manage-category'
+	},
+	{
+		name: 'Manage Users',
+		link: '/admin/manage-users'
+	},
+	{
+		name: 'Manage Posts',
+		link: '/admin/manage-posts'
+	},
+	{
+		name: 'Manage Comments',
+		link: '/admin/manage-comments'
 	}
 ]
 
 
 const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
+	const { userAuth } = useSelector(state => state?.users);
+
+	
+
 
 	const { pathname } = useLocation();
 
@@ -33,10 +49,9 @@ const Navbar = () => {
 		}
 	}
 
-	const { userAuth } = useSelector(state => state?.users);
 
 	return <>
-		<nav className="flex fixed top-0 w-screen items-center justify-between flex-wrap bg-teal-500 px-6 py-3">
+		<nav className="flex fixed top-0 w-screen items-center justify-between flex-wrap bg-teal-500 px-6 py-3 z-30">
 			<Link to="/" className="flex items-center flex-shrink-0 text-white mr-6">
 				<span className="font-semibold text-2xl tracking-tight">Super Blog</span>
 			</Link>
@@ -49,21 +64,35 @@ const Navbar = () => {
 				<div className="text-lg flex flex-col text-center items-center lg:block lg:flex-row  lg:flex-grow justify-center lg:text-left">
 
 
-					{
-						menu.map((item, index) => (
-							<Link key={index} to={item.link} className={`block mt-4 lg:inline-block lg:mt-0 hover:text-white lg:mr-4 w-1/2 lg:w-auto ${isActive(item.link)} `}>
-								{item.name}
-							</Link>
-						))
-					}
 
+					<Link to='/dashboard' className={`block mt-4 lg:inline-block lg:mt-0 hover:text-white lg:mr-4 w-1/2 lg:w-auto ${isActive('/dashboard')} `}>
+						Dashboard
+					</Link>
+					<Link to='/live-posts' className={`block mt-4 lg:inline-block lg:mt-0 hover:text-white lg:mr-4 w-1/2 lg:w-auto ${isActive('/live-posts')} `}>
+						Live Posts
+					</Link>
+					<Link to='/live-categories' className={`block mt-4 lg:inline-block lg:mt-0 hover:text-white lg:mr-4 w-1/2 lg:w-auto ${isActive('/live-categories')} `}>
+						Live Categories
+					</Link>
 					{
-						userAuth?.isAdmin && <Link to="/admin" className={`block mt-4 lg:inline-block lg:mt-0  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('admin') ? 'text-white' : 'text-teal-200'} `}>
+						userAuth?.isAdmin && <div className={`group relative block mt-4 lg:inline-block lg:mt-0 cursor-pointer  hover:text-white lg:mr-4  ${pathname.includes('admin') ? 'text-white' : 'text-teal-200'}  w-1/2 lg:w-auto`}>
 							Admin Panel
-						</Link>
+							<div className={`origin-top-right hidden group-hover:block absolute left-0 top-5 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black z-40 ring-opacity-5 focus:outline-none`}>
+
+								<div className="py-1" role="none">
+									{
+										adminDropdown.map((item, index) => (
+											<Link key={index} to={item.link} className="block px-4 py-2  text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">{item.name}</Link>
+										))
+									}
+
+
+								</div>
+							</div>
+						</div>
 					}
 
-					<div className={`group relative block mt-4 lg:inline-block lg:mt-0 cursor-pointer  hover:text-white lg:mr-4  w-1/2 lg:w-auto text-teal-200 `}>
+					<div className={`group relative block mt-4 lg:inline-block lg:mt-0 cursor-pointer  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('/create-category' || 'create-post') ? 'text-white' : 'text-teal-200'} `}>
 						Create
 						<div className={`origin-top-right hidden group-hover:block absolute left-0 top-5 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20`}>
 
@@ -76,7 +105,7 @@ const Navbar = () => {
 
 				</div>
 				<div className='flex flex-col w-1/2 lg:w-auto mx-auto mt-5 lg:mt-0  lg:mx-0 lg:flex-row'>
-					<div className="relative group inline-block text-left">
+					{userAuth && <div className="relative group inline-block text-left">
 						<div>
 							<div className="inline-flex justify-center w-full   shadow-sm font-semibold text-gray-700 p-0 m-0 cursor-pointer">
 								<img className="w-14 h-14 rounded-full" src={userAuth.profilePhoto} alt="user profile" />
@@ -94,7 +123,7 @@ const Navbar = () => {
 								<Link to="/auth/logout" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Logout</Link>
 							</div>
 						</div>
-					</div>
+					</div>}
 
 
 					{/* <button className="flex justify-center items-center px-4 py-2 leading-none border rounded text-white bg-red-400 border-white hover:border-transparent hover:text-teal-500 hover:bg-white mt-4 lg:mt-0 mx-2 font-medium">

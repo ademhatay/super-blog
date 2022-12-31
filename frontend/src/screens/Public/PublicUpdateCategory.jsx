@@ -2,10 +2,11 @@ import { PlusCircleIcon, BookOpenIcon } from "@heroicons/react/solid";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSingleCategoryAction, updateCategoryAction, deleteCategoryAction} from "../../app/slices/category/categorySlice";
+import { fetchSingleCategoryAction, updateCategoryAction, deleteCategoryAction } from "../../app/slices/category/categorySlice";
 import { Container } from '../../components';
-import { useEffect } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getUser } from "../../utils/isAdmin";
 
 //Form schema
 const formSchema = Yup.object({
@@ -13,11 +14,26 @@ const formSchema = Yup.object({
 });
 
 const PublicUpdateCategory = () => {
+
+	const [isAdmin, setIsAdmin] = useState(false);
 	const dispatch = useDispatch();
+
+	const navigate = useNavigate();
+	const { userAuth } = useSelector(state => state?.users);
+
+	useEffect(() => {
+		getUser(userAuth).then((res) => {
+			if (res) {
+				setIsAdmin(true)
+			} else {
+				setIsAdmin(false);
+				navigate('/dashboard');
+			}
+		})
+	}, [userAuth]);
 
 	const { id } = useParams();
 
-	const navigate = useNavigate();
 
 	//fetch category
 	useEffect(() => {
@@ -52,9 +68,8 @@ const PublicUpdateCategory = () => {
 		navigate("/live-categories")
 	}
 
-
 	return (
-		<Container>
+		isAdmin&& <Container>
 			<div className=" h-full flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
 				<div className="max-w-md w-full space-y-8">
 					<div>
@@ -133,16 +148,16 @@ const PublicUpdateCategory = () => {
 							</div>
 							<button
 								onClick={deleteCategory}
-										className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-5"
-									>
-										<span className="absolute left-0 inset-y-0 flex items-center pl-3">
-											<PlusCircleIcon
-												className="h-5 w-5 text-yellow-500 group-hover:text-indigo-400"
-												aria-hidden="true"
-											/>
-										</span>
-										Delete Category
-									</button>
+								className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 mt-5"
+							>
+								<span className="absolute left-0 inset-y-0 flex items-center pl-3">
+									<PlusCircleIcon
+										className="h-5 w-5 text-yellow-500 group-hover:text-indigo-400"
+										aria-hidden="true"
+									/>
+								</span>
+								Delete Category
+							</button>
 						</div>
 					</form>
 				</div>
