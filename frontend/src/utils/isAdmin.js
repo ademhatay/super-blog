@@ -9,6 +9,5 @@ export const getUser = async (userAuth) => {
 		},
 	});
 	const data = await res.json();
-	console.log(data.isAdmin);
 	return data.isAdmin;
 };

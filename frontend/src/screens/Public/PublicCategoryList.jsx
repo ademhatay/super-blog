@@ -25,7 +25,6 @@ const CategoryList = () => {
 				setIsAdmin(false);
 			}
 		})
-		console.log(isAdmin);
 	}, [userAuth]);
 
 	useEffect(() => {

@@ -30,7 +30,7 @@ const PublicUpdateCategory = () => {
 				navigate('/dashboard');
 			}
 		})
-	}, [userAuth]);
+	}, [userAuth, navigate]);
 
 	const { id } = useParams();
 
