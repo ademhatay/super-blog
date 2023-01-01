@@ -34,6 +34,32 @@ export const createPostAction = createAsyncThunk(
 	}
 );
 
+// fetch ALl Posts Action
+export const fetchAllPostsAction = createAsyncThunk(
+	'post/fetchAll',
+	async (post, { rejectWithValue, getState, dispatch }) => {
+		// get user token
+		const user = getState()?.users;
+		const { userAuth } = user;
+		const config = {
+			headers: {
+				'Content-Type': 'application/json',
+				Authorization: `Bearer ${userAuth.token}`,
+			},
+		};
+		// call API
+		try {
+			const { data } = await axios.get(`${API_URL}/api/posts`, config);
+			return data;
+		} catch (error) {
+			if (!error?.response) {
+				throw error;
+			}
+			return rejectWithValue(error.response.data);
+		};
+	}
+);
+
 
 // slice
 
@@ -53,6 +79,22 @@ const postSlice = createSlice({
 			state.serverErr = undefined;
 		});
 		builder.addCase(createPostAction.rejected, (state, action) => {
+			state.appErr = action?.payload?.message;
+			state.serverErr = action?.error?.message;
+			state.loading = false;
+		});
+
+		// fetch all posts
+		builder.addCase(fetchAllPostsAction.pending, (state, action) => {
+			state.loading = true;
+		});
+		builder.addCase(fetchAllPostsAction.fulfilled, (state, action) => {
+			state.allPosts = action?.payload;
+			state.loading = false;
+			state.appErr = undefined;
+			state.serverErr = undefined;
+		});
+		builder.addCase(fetchAllPostsAction.rejected, (state, action) => {
 			state.appErr = action?.payload?.message;
 			state.serverErr = action?.error?.message;
 			state.loading = false;
