@@ -36,9 +36,6 @@ const Navbar = () => {
 	const [isOpen, setIsOpen] = useState(false);
 	const { userAuth } = useSelector(state => state?.users);
 
-	
-
-
 	const { pathname } = useLocation();
 
 	const isActive = (path) => {
@@ -92,7 +89,7 @@ const Navbar = () => {
 						</div>
 					}
 
-					<div className={`group relative block mt-4 lg:inline-block lg:mt-0 cursor-pointer  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('/create-category' || 'create-post') ? 'text-white' : 'text-teal-200'} `}>
+					<div className={`group relative block mt-4 lg:inline-block lg:mt-0 cursor-pointer  hover:text-white lg:mr-4  w-1/2 lg:w-auto ${pathname.includes('create') && !pathname.includes('admin') ? 'text-white' : 'text-teal-200'} `}>
 						Create
 						<div className={`origin-top-right hidden group-hover:block absolute left-0 top-5 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20`}>
 

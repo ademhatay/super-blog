@@ -19,6 +19,7 @@ export { default as ManageComments } from './Admin/ManageComments'
 export { default as PublicCategory } from './Public/PublicCategory'
 export { default as PublicCategoryList } from './Public/PublicCategoryList'
 export { default as PublicUpdateCategory } from './Public/PublicUpdateCategory'
+export { default as PublicPost } from './Public/PublicPost'
 
 
 

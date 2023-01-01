@@ -1,7 +1,7 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import App from '../App';
 
-import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments, PublicCategoryList, PublicCategory, PublicUpdateCategory, ManageCategory } from '../screens';
+import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments, PublicCategoryList, PublicCategory, PublicUpdateCategory, ManageCategory, PublicPost } from '../screens';
 
 
 const router = createBrowserRouter(
@@ -27,6 +27,7 @@ const router = createBrowserRouter(
 			<Route path="live-posts" element={<LivePosts />} />
 			<Route path="live-categories" element={<PublicCategoryList />} />
 			<Route path="create-category" element={<PublicCategory />} />
+			<Route path="create-post" element={<PublicPost />} />
 			<Route path="category-update/:id" element={<PublicUpdateCategory />} />
 		</>
 
