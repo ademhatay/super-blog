@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { Container } from '../components';
+import LatestPost from './LatestPost';
 
 const DashboardScreen = () => {
 
@@ -11,49 +11,14 @@ const DashboardScreen = () => {
 	return <>
 		<Container>
 			<div className="flex h-full flex-col lg:flex-row">
-				<div className='w-full lg:w-1/3 bg-gray-50 border-b-2 lg:border-r-2  p-5 flex flex-col items-center justify-center'>
+				<div className='w-full lg:w-1/3 bg-teal-700 border-b-2 lg:border-r-2   p-5 flex flex-col items-center justify-center'>
 					<h2 className='text-2xl font-bold bg-purple-600'>Latest Posts</h2>
+					<LatestPost />
 
-					<div className='w-full my-3 rounded-md px-5 py-2 bg-white shadow-lg'>
-						<h2 className='text-xl font-bold'>Post Title - Category 1</h2>
-						<p className='text-sm'>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-						</p>
-						<Link to='/post/1' className='text-blue-500'>Read More</Link>
-						<hr className='my-3' />
-						<div className='flex justify-evenly items-center'>
+					<LatestPost />
+					<LatestPost />
 
-							<p className=' font-bold'>Author</p>
-							<p className=''>Date</p>
-						</div>
-					</div>
-					<div className='w-full my-3 rounded-md px-5 py-2 bg-white shadow-lg'>
-						<h2 className='text-xl font-bold'>Post Title - Category 2</h2>
-						<p className='text-sm'>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-						</p>
-						<Link to='/post/1' className='text-blue-500'>Read More</Link>
-						<hr className='my-3' />
-						<div className='flex justify-evenly items-center'>
 
-							<p className=' font-bold'>Author</p>
-							<p className=''>Date</p>
-						</div>
-					</div>
-
-					<div className='w-full my-3 rounded-md px-5 py-2 bg-white shadow-lg'>
-						<h2 className='text-xl font-bold'>Post Title - Category 3</h2>
-						<p className='text-sm'>
-							Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.
-						</p>
-						<Link to='/post/1' className='text-blue-500'>Read More</Link>
-						<hr className='my-3' />
-						<div className='flex justify-evenly items-center'>
-
-							<p className=' font-bold'>Author</p>
-							<p className=''>Date</p>
-						</div>
-					</div>
 				</div>
 
 				{

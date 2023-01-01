@@ -57,7 +57,7 @@ const createPost = asyncHandler(async (req, res) => {
 // -------------------------------------------------
 const getAllPosts = asyncHandler(async (req, res) => {
 	try {
-		const posts = await Post.find({}).populate('user');
+		const posts = await Post.find({}).populate('user').populate('category')
 		res.json(posts);
 	} catch (error) {
 		res.json(error);

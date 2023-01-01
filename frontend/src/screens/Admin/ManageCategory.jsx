@@ -22,7 +22,7 @@ const ManageCategory = () => {
 				navigate('/dashboard')
 			}
 		})
-	}, [userAuth]);
+	}, [userAuth, navigate]);
 
 	useEffect(() => {
 		dispatch(fetchCategoryAction());

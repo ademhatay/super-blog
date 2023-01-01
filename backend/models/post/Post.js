@@ -6,11 +6,11 @@ const postSchema = mongoose.Schema({
 		required: [true, "Post title is required"],
 		trim: true
 	},
-	category: {
+	category: [{
 		type: String,
 		required: [true, "Post category is required"],
-		default: 'All'
-	},
+		ref: 'Category'
+	}],
 	isLiked: {
 		type: Boolean,
 		default: false

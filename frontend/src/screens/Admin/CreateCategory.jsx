@@ -28,7 +28,7 @@ const CreateCategory = () => {
 				navigate('/dashboard')
 			}
 		})
-	}, [userAuth]);
+	}, [userAuth, navigate]);
 
 	useEffect(() => {
 		dispatch(fetchCategoryAction());
@@ -45,7 +45,7 @@ const CreateCategory = () => {
 			navigate('/admin/manage-category');
 		},
 	});
-	const { loading, appErr, serverErr, categoryList: category } = useSelector(state => state?.category);
+	const { loading, appErr, serverErr } = useSelector(state => state?.category);
 
 	return <>
 		<div className='w-full h-full  bg-gray-50 p-5 '>
@@ -53,7 +53,7 @@ const CreateCategory = () => {
 			<div className="flex justify-center flex-col gap-5 flex-wrap">
 				<div className='w-full lg:w-8/12 mx-auto  flex flex-col justify-center  bg-white p-4 my-3 rounded-md shadow-lg'>
 					<div className='text-3xl text-center font-bold italic '>
-						Add New Category
+						{isAdmin ? 'Add New Category' : ''}
 					</div>
 					<div>
 						<form onSubmit={formik.handleSubmit} className='flex flex-col gap-5'>
