@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom';
 import { fetchAllPostsAction } from '../../app/slices/posts/postSlices';
 
 const ManagePosts = () => {
@@ -44,9 +45,9 @@ const ManagePosts = () => {
 											{post.title}
 										</td>
 										<td className='border-b flex justify-evenly border-gray-200 p-2'>
-											<button className='bg-yellow-400 text-white p-1 rounded-md'>
+											<Link to={`/post/${post._id}`} className='bg-yellow-400 text-white p-1 rounded-md'>
 												Show
-											</button>
+											</Link>
 										</td>
 									</tr>
 								))}

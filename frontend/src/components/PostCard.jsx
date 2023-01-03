@@ -12,7 +12,7 @@ const PostCard = ({ post, userAuth }) => {
 		<div className='w-full my-3 rounded-md px-5 py-2 bg-white shadow-lg'>
 			<div className='flex flex-col lg:flex-row'>
 				<div className='w-full lg:w-2/5'>
-					<img src={post.image} alt='post' className='w-full h-48 object-cover' />
+					<img src={post.image} alt='post' className='w-full h-48 object-cover p-1' />
 
 					<div className='flex justify-between items-center mt-3'>
 						<div className='flex items-center'>
@@ -66,7 +66,7 @@ const PostCard = ({ post, userAuth }) => {
 					</div>
 
 					<div className='flex justify-evenly flex-col lg:flex-row mt-5'>
-						<Link to='/post/1' className='bg-blue-400 my-1 lg:my-0 px-3 py-1 rounded-md text-white'>View Post</Link>
+						<Link to={`/post/${post._id}`} className='bg-blue-400 my-1 lg:my-0 px-3 py-1 rounded-md text-white'>View Post</Link>
 
 						{ post.user[0]._id === userAuth._id && <Link to='/post/1/edit' className='bg-green-400 my-1 lg:my-0 px-3 py-1 rounded-md text-white lg:ml-2'>Edit Post</Link>}
 
