@@ -57,7 +57,7 @@ const createPost = asyncHandler(async (req, res) => {
 // -------------------------------------------------
 const getAllPosts = asyncHandler(async (req, res) => {
 	try {
-		const posts = await Post.find({}).populate('user').populate('category')
+		const posts = await Post.find({}).populate('user').populate('category').populate("comments")
 		res.json(posts);
 	} catch (error) {
 		res.json(error);
@@ -71,7 +71,7 @@ const getSinglePost = asyncHandler(async (req, res) => {
 	validateMongodbID(id);
 
 	try {
-		const post = await Post.findById(id).populate('user').populate('dislikes').populate('likes');
+		const post = await Post.findById(id).populate('user').populate('dislikes').populate('likes').populate("comments");
 		// update number of views
 		await Post.findByIdAndUpdate(id, {
 			$inc: { numViews: 1 },
@@ -178,7 +178,7 @@ const toggleAddLikePost = asyncHandler(async (req, res) => {
 const toggleAddDislikePost = asyncHandler(async (req, res) => {
 	//1.Find the post to be disLiked
 	const { postId } = req.body;
-	const post = await Post.findById(postId).populate('user');
+	const post = await Post.findById(postId);
 	//2.Find the login user
 	const loginUserId = req?.user?._id;
 	//3.Check if this user has already disLikes
@@ -196,7 +196,7 @@ const toggleAddDislikePost = asyncHandler(async (req, res) => {
 				isLiked: false,
 			},
 			{ new: true }
-		).populate('user');
+		);
 		res.json(post);
 	}
 	//Toggling
@@ -209,7 +209,7 @@ const toggleAddDislikePost = asyncHandler(async (req, res) => {
 				isDisliked: false,
 			},
 			{ new: true }
-		).populate('user');
+		);
 		res.json(post);
 	} else {
 		const post = await Post.findByIdAndUpdate(
@@ -219,7 +219,7 @@ const toggleAddDislikePost = asyncHandler(async (req, res) => {
 				isDisliked: true,
 			},
 			{ new: true }
-		).populate('user');
+		);
 		res.json(post);
 	}
 

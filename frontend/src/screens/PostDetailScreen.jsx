@@ -4,6 +4,7 @@ import { BanIcon, CheckIcon, EyeIcon, PencilAltIcon, TrashIcon } from "@heroicon
 import { Container } from "../components";
 import { useDispatch, useSelector } from "react-redux";
 import { deletePostAction, getPostByIdAction, postLikeAction, toggleAddDisLikesToPost } from "../app/slices/posts/postSlices";
+import CommentsList from "../components/Comments/CommentList";
 
 const PostDetail = () => {
 
@@ -67,7 +68,7 @@ const PostDetail = () => {
 													</Link>
 													<button
 														onClick={handleDeletePost}
-													className="ml-3">
+														className="ml-3">
 														<TrashIcon className="h-8 text-red-600" />
 													</button>
 												</div>
@@ -113,8 +114,7 @@ const PostDetail = () => {
 					{/* Add comment Form component here */}
 
 					<div className="flex justify-center  items-center">
-						{/* <CommentsList comments={post?.comments} postId={post?._id} /> */}
-						CommentsList
+						<CommentsList comments={post?.comments} />
 					</div>
 				</section>
 			</Container>

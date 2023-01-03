@@ -1,5 +1,6 @@
 import { createBrowserRouter, createRoutesFromElements, Route } from "react-router-dom";
 import App from '../App';
+import { UpdateComment } from "../components";
 
 import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments, PublicCategoryList, PublicCategory, PublicUpdateCategory, ManageCategory, PublicPost, PostDetail, UpdatePost } from '../screens';
 
@@ -31,6 +32,7 @@ const router = createBrowserRouter(
 			<Route path="category-update/:id" element={<PublicUpdateCategory />} />
 			<Route path="post/:id" element={<PostDetail />} />
 			<Route path="post/:id/edit" element={<UpdatePost /> } />
+			<Route path="comment/:id/edit" element={<UpdateComment /> } />
 		</>
 
 	)
