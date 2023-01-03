@@ -23,4 +23,8 @@ export { default as PublicPost } from './Public/PublicPost'
 
 
 
+
 export { default as LivePosts } from './LivePostsScreen'
+export { default as PostDetail } from './PostDetailScreen'
+export { default as UpdatePost } from './PostEditScreen'
+

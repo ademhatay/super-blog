@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { createPostAction } from '../../app/slices/posts/postSlices';
 import { fetchCategoryAction } from '../../app/slices/category/categorySlice';
 import Dropzone from 'react-dropzone'
+import { useNavigate } from 'react-router-dom';
 
 //Form schema
 const formSchema = Yup.object({
@@ -18,6 +19,7 @@ const formSchema = Yup.object({
 const PublicPost = () => {
 
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		dispatch(fetchCategoryAction())
@@ -39,7 +41,9 @@ const PublicPost = () => {
 			dispatch(createPostAction(values));
 			// console.log(values);
 			formik.resetForm();
-			// wait 4 seconds and navigate to live-post
+			setTimeout(() => {
+				navigate('/live-post')
+			}, 4000)
 		},
 		validationSchema: formSchema,
 	});
