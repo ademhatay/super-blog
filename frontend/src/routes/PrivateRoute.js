@@ -2,7 +2,7 @@ import { createBrowserRouter, createRoutesFromElements, Route } from "react-rout
 import App from '../App';
 import { UpdateComment } from "../components";
 
-import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments, PublicCategoryList, PublicCategory, PublicUpdateCategory, ManageCategory, PublicPost, PostDetail, UpdatePost } from '../screens';
+import { AuthIndex, AuthRoot, Login, Dashboard, Register, Logout, Admin, LivePosts, Stats, CreateCategory, ChooseTopic, ManageUsers, ManagePosts, ManageComments, PublicCategoryList, PublicCategory, PublicUpdateCategory, ManageCategory, PublicPost, PostDetail, UpdatePost, Profile, UploadProfilPhoto, UpdateProfil } from '../screens';
 
 
 const router = createBrowserRouter(
@@ -33,6 +33,10 @@ const router = createBrowserRouter(
 			<Route path="post/:id" element={<PostDetail />} />
 			<Route path="post/:id/edit" element={<UpdatePost /> } />
 			<Route path="comment/:id/edit" element={<UpdateComment /> } />
+			
+			<Route path="/profile/:id" element={<Profile />} />
+			<Route path="/profile/:id/edit" element={<UpdateProfil />} />
+			<Route path="/upload-profile-photo" element={<UploadProfilPhoto />} />
 		</>
 
 	)

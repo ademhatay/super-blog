@@ -7,6 +7,7 @@ import { getUser } from '../../utils/isAdmin';
 const ChooseTopic = () => {
 
 	const [isAdmin, setIsAdmin] = useState(false);
+	console.log(isAdmin);
 
 	const [open, setOpen] = useState(false);
 
@@ -23,7 +24,7 @@ const ChooseTopic = () => {
 				navigate('/dashboard')
 			}
 		})
-	}, [userAuth]);
+	}, [userAuth, navigate]);
 
 	return <>
 		<div className='w-full h-full  bg-gray-50 p-5 '>

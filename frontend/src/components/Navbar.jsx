@@ -115,7 +115,7 @@ const Navbar = () => {
 								</span>
 							</p>
 							<div className="py-1" role="none">
-								<Link to="/profile" className="block px-4 py-2  text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Profile</Link>
+								<Link to={`/profile/${userAuth._id}`} className="block px-4 py-2  text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Profile</Link>
 								<Link to="/settings" className="block px-4 py-2  text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Settings</Link>
 								<Link to="/auth/logout" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900" role="menuitem">Logout</Link>
 							</div>

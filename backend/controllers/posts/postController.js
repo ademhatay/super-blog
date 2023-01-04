@@ -56,11 +56,18 @@ const createPost = asyncHandler(async (req, res) => {
 // ------------------ GET ALL POST -----------------
 // -------------------------------------------------
 const getAllPosts = asyncHandler(async (req, res) => {
-	try {
-		const posts = await Post.find({}).populate('user').populate('category').populate("comments")
+	const { limit } = req.query;
+	if (limit) {
+		const posts = await Post.find({}).limit(parseInt(limit)).populate('user').populate('category').populate("comments");
 		res.json(posts);
-	} catch (error) {
-		res.json(error);
+		return;
+	} else {
+		try {
+			const posts = await Post.find({}).populate('user').populate('category').populate("comments")
+			res.json(posts);
+		} catch (error) {
+			res.json(error);
+		}
 	}
 });
 

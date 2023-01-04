@@ -28,3 +28,10 @@ export { default as LivePosts } from './LivePostsScreen'
 export { default as PostDetail } from './PostDetailScreen'
 export { default as UpdatePost } from './PostEditScreen'
 
+
+// profile
+
+export { default as Profile } from './Profile/Profile';
+export { default as UpdateProfil } from './Profile/UpdateProfileForm';
+export { default as UploadProfilPhoto } from './Profile/UploadProfilePhoto';
+
